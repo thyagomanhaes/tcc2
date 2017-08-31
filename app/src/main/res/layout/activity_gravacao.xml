@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fundo_gravacao">
+
+    <TextView
+        android:id="@+id/nomePaciente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Nome Paciente"
+        android:textColor="#000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/idPaciente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center_horizontal"
+        android:text="24/08/2017  12:30 AM"
+        android:textColor="#000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/nomePaciente"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/nomeGravacao"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Gravação.3gp"
+        android:textColor="#000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/idPaciente"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="70"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000"
+        android:textSize="60sp"
+        android:layout_alignBottom="@+id/imageView6"
+        android:layout_toStartOf="@+id/imageView6" />
+
+    <view
+        android:id="@+id/myvisualizerview"
+        class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView2"
+        id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        app:borderWidth="5dip"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true" />
+
+    <ToggleButton
+        android:id="@+id/playButton"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:textOff="PLAY"
+        android:textOn="STOP"
+        android:layout_above="@+id/editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp" />
+
+    <TextView
+        android:id="@+id/tempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/playButton"
+        android:layout_alignBottom="@+id/playButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="19dp"
+        android:text="duração"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/textView2"
+        android:textColor="#000"
+        android:layout_alignBaseline="@+id/playButton"
+        android:layout_alignBottom="@+id/playButton"
+        android:layout_alignStart="@+id/editText" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_assignment"
+        android:layout_marginBottom="13dp"
+        android:layout_marginStart="13dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_share"
+        android:id="@+id/imageView5"
+        android:layout_alignTop="@+id/playButton"
+        android:layout_alignStart="@+id/imageView4" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/bpm"
+        android:id="@+id/imageView6"
+        android:layout_below="@+id/nomeGravacao"
+        android:layout_alignEnd="@+id/nomePaciente"
+        android:layout_marginTop="21dp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@android:color/background_light"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Anotação"
+        android:padding="5dp"
+        android:textColor="#000"
+        android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignTop="@+id/imageView4"
+        android:layout_toEndOf="@+id/imageView4" />
+
+</RelativeLayout>
+

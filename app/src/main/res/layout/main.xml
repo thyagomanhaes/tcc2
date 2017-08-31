@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <view
+        android:id="@+id/visualizerView2"
+        class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView"
+        id="@+id/view"
+        android:layout_width="400dp"
+        android:layout_height="350dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+
+    <ToggleButton
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="34dp"
+        android:textOff="Gravar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/recordButton2" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:text="Salvar"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/recordButton2"
+        android:layout_marginStart="26dp"
+        android:id="@+id/saveButton2"/>
+
+</RelativeLayout>
