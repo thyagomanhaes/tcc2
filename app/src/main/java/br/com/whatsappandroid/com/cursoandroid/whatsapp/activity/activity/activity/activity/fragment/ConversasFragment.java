@@ -46,29 +46,33 @@ import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activi
  */
 public class ConversasFragment extends Fragment {
 
-    boolean isRecording = false;
-    AudioManager am = null;
-    AudioRecord record = null;
-    AudioTrack track = null;
-    TextView textData;
-
     // Variáveis da interface gráfica
     private VisualizerView visualizer;
-    private ToggleButton recordButton;
-    private Button saveButton;
-    private Button deleteButton;
-    private Button pararButton;
-    private Button inicioAusculta;
-
     private ToggleButton auscultationButton;
 
     private static final String TAG = ConversasFragment.class.getName();
-    private MediaRecorder recorder; // para gar
+    private MediaRecorder recorder; // para gravar
     private Handler handler;
     private boolean recording;
     private boolean iniciouAusculta = false;
 
     private Chronometer ch;
+
+
+    private String TAG2 = "AUDIO_RECORD_PLAYBACK";
+    private boolean isRunning = true;
+    private Thread m_thread;               /* Thread for running the Loop */
+
+    private AudioRecord recorder2 = null;
+    private AudioTrack track = null;
+
+    int bufferSize = 320;                  /* Buffer for recording data */
+    byte buffer[] = new byte[bufferSize];
+    private Button botaoStart;
+    private Button botaoStop;
+
+
+
 
     public ConversasFragment() {
         // Required empty public constructor
@@ -79,53 +83,48 @@ public class ConversasFragment extends Fragment {
         ch.start();
     }
 
-    private void initRecordAndTrack()
-    {
-        int min = AudioRecord.getMinBufferSize(8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        record = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION, 8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
-                min);
-        int maxJitter = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        track = new AudioTrack(AudioManager.MODE_IN_COMMUNICATION, 8000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, maxJitter,
-                AudioTrack.MODE_STREAM);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_conversas, container, false);
 
-        initRecordAndTrack();
+        // Capturando os elementos da interface gráfica
+        visualizer = (VisualizerView) view.findViewById(R.id.visualizerView); // Visualizador para o gráfico
+        ch = (Chronometer) view.findViewById(R.id.chronometer2); // Cronômetro
+        auscultationButton = (ToggleButton) view.findViewById(R.id.btAuscultation); // Botão para Iniciar/Pausar Auscultação
 
-        am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(true);
+        // PEGANDO O BOTÃO DE START E PAUSA
+        botaoStart = (Button) view.findViewById(R.id.StartButton);
+        botaoStop = (Button) view.findViewById(R.id.StopButton);
 
-        // Thread para executar o áudio gravado em paralelo
-        (new Thread()
-        {
+        botaoStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run()
-            {
-                recordAndPlay();
+            public void onClick(View view) {
+                Log.d(TAG2, "======== Start Button Pressed ==========");
+                isRunning = true;
+                do_loopback(isRunning);
             }
-        }).start();
+        });
+
+        botaoStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG2, "======== Stop Button Pressed ==========");
+                isRunning = false;
+                do_loopback(isRunning);
+            }
+        });
 
 
-        //recordButton = (ToggleButton) view.findViewById(R.id.recordButton);
-        //saveButton = (Button) view.findViewById(R.id.saveButton);
-        //saveButton.setEnabled(false);
-        //deleteButton = (Button) view.findViewById(R.id.deleteButton);
-        //deleteButton.setEnabled(false);
-        //viewSavedRecordingsButton = (Button) view.findViewById(R.id.viewSavedRecordingsButton);
-        visualizer = (VisualizerView) view.findViewById(R.id.visualizerView);
 
-        ch = (Chronometer) view.findViewById(R.id.chronometer2);
 
-        // Botão para Iniciar/Pausar Auscultação
-        auscultationButton = (ToggleButton) view.findViewById(R.id.btAuscultation);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-        ImageView imageView2 = (ImageView) view.findViewById(R.id.imageView2);
+
+
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView); // Gif 1
+        ImageView imageView2 = (ImageView) view.findViewById(R.id.imageView2); // Gif 2
 
         //load with glide but you can download image gif or share link
         Glide.with(getActivity())
@@ -140,119 +139,13 @@ public class ConversasFragment extends Fragment {
                 .placeholder(R.drawable.heartbeat3)
                 .crossFade().into(imageView2);
 
-
-        //recordButton.setVisibility(View.INVISIBLE);
-        //saveButton.setVisibility(View.INVISIBLE);
-        //deleteButton.setVisibility(View.INVISIBLE);
-
-        //inicioAusculta = (Button) view.findViewById(R.id.btIniciarAusculta);
-
-
-/*        // AÇÃO DO BOTÃO SALVAR
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.name_edittext, null);
-                final EditText nameEditText = (EditText) view.findViewById(R.id.nameEditText);
-
-                AlertDialog.Builder inputDialog = new AlertDialog.Builder(getActivity());
-                inputDialog.setView(view);
-                inputDialog.setTitle("Gravação");
-                inputDialog.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = nameEditText.getText().toString().trim();
-                        if (name.length() != 0){
-                            File tempFile = (File) v.getTag();
-                            File newFile = new File(getActivity().getExternalFilesDir(null).getAbsolutePath() + File.separator + name + ".3gp");
-                            tempFile.renameTo(newFile);
-                            saveButton.setEnabled(false);
-                            deleteButton.setEnabled(false);
-                            recordButton.setEnabled(true);
-                            //viewSavedRecordingsButton.setEnabled(true);
-                        }
-                        else {
-                            Toast message = Toast.makeText(getActivity(), "ERRO PESSOAL", Toast.LENGTH_SHORT);
-                            message.setGravity(Gravity.CENTER, message.getXOffset()/2, message.getYOffset()/2);
-                            message.show();
-                        }
-                    }
-                });
-
-                inputDialog.setNegativeButton("Cancelar", null);
-                inputDialog.show();
-                //   inputDialog.setPositiveButton()
-            }
-        });*/
-
-
-
-
-
-/*        inicioAusculta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                iniciouAusculta = true;
-                inicioAusculta.setVisibility(View.INVISIBLE);
-
-                //recordButton.setVisibility(View.VISIBLE);
-                //saveButton.setVisibility(View.VISIBLE);
-                //deleteButton.setVisibility(View.VISIBLE);
-
-                visualizer.clear();
-
-                //saveButton.setEnabled(false);
-                //deleteButton.setEnabled(false);
-                //viewSavedRecordingsButton.setEnabled(false);
-
-                if (recorder == null)
-                    recorder = new MediaRecorder();
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-                recorder.setAudioEncodingBitRate(16);
-                recorder.setAudioSamplingRate(44100);
-
-                try{
-                    File tempFile = File.createTempFile("VoiceRecorder", ".3gp", getActivity().getExternalFilesDir(null));
-                    //saveButton.setTag(tempFile);
-                    //deleteButton.setTag(tempFile);
-                    recorder.setOutputFile(tempFile.getAbsolutePath());
-                    recorder.prepare();
-                    recorder.start();
-                    ch.setBase(SystemClock.elapsedRealtime());
-                    ch.start();
-                    recording = true;
-                    handler.post(updateVisualizer);
-                } // fim do try
-                catch (IllegalStateException e){
-                    Log.e(TAG, e.toString());
-                } catch (IOException e){
-                    Log.e(TAG, e.toString());
-                } // fim do catch
-            }
-        });*/
-
         handler = new Handler();
 
         auscultationButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
-                    //iniciouAusculta = true;
-                    //inicioAusculta.setVisibility(View.INVISIBLE);
-
-                    //recordButton.setVisibility(View.VISIBLE);
-                    //saveButton.setVisibility(View.VISIBLE);
-                    //deleteButton.setVisibility(View.VISIBLE);
-
                     visualizer.clear();
-
-                    //saveButton.setEnabled(false);
-                    //deleteButton.setEnabled(false);
-                    //viewSavedRecordingsButton.setEnabled(false);
 
                     if (recorder == null)
                         recorder = new MediaRecorder();
@@ -264,8 +157,6 @@ public class ConversasFragment extends Fragment {
 
                     try{
                         File tempFile = File.createTempFile("VoiceRecorder", ".3gp", getActivity().getExternalFilesDir(null));
-                        //saveButton.setTag(tempFile);
-                        //deleteButton.setTag(tempFile);
                         recorder.setOutputFile(tempFile.getAbsolutePath());
                         recorder.prepare();
                         recorder.start();
@@ -289,7 +180,6 @@ public class ConversasFragment extends Fragment {
                 } // fim do else
             }
         });
-        //auscultationButton.setOnCheckedChangeListener(recordButtonListener);
 
         return view;
     }
@@ -306,81 +196,119 @@ public class ConversasFragment extends Fragment {
         }
     };
 
-    private void recordAndPlay()
+    private void do_loopback(final boolean flag)
     {
-        short[] lin = new short[1024];
-        int num = 0;
-        am.setMode(AudioManager.MODE_IN_COMMUNICATION);
-        while (true)
+        m_thread = new Thread(new Runnable() {
+            public void run() {
+                run_loop(flag);
+            }
+        });
+        m_thread.start();
+    }
+
+    public void run_loop (boolean isRunning)
+    {
+
+        /** == If Stop Button is pressed == **/
+        if (isRunning == false) {
+            Log.d(TAG2, "=====  Stop Button is pressed ===== ");
+
+            if (AudioRecord.STATE_INITIALIZED == recorder2.getState()){
+                recorder2.stop();
+                recorder2.release();
+            }
+            if (AudioTrack.STATE_INITIALIZED == track.getState()){
+                track.stop();
+                track.release();
+            }
+            return;
+        }
+
+
+        /** ======= Initialize AudioRecord and AudioTrack ======== **/
+        recorder2 = findAudioRecord(recorder2);
+        if (recorder2 == null) {
+            Log.e(TAG2, "======== findAudioRecord : Returned Error! =========== ");
+            return;
+        }
+
+        track = findAudioTrack(track);
+        if (track == null) {
+            Log.e(TAG2, "======== findAudioTrack : Returned Error! ========== ");
+            return;
+        }
+
+        if ((AudioRecord.STATE_INITIALIZED == recorder2.getState()) &&
+                (AudioTrack.STATE_INITIALIZED == track.getState()))
         {
-            if (isRecording)
-            {
-                num = record.read(lin, 0, 1024);
-                track.write(lin, 0, num);
+            recorder2.startRecording();
+            Log.d(TAG2, "========= Recorder Started... =========");
+            track.play();
+            Log.d(TAG2, "========= Track Started... =========");
+        }
+        else
+        {
+            Log.d(TAG2, "==== Initilazation failed for AudioRecord or AudioTrack =====");
+            return;
+        }
+
+        /** ------------------------------------------------------ **/
+
+    /* Recording and Playing in chunks of 320 bytes */
+        bufferSize = 320;
+
+        while (isRunning == true)
+        {
+        /* Read & Write to the Device */
+            recorder2.read(buffer, 0, bufferSize);
+            track.write(buffer, 0, bufferSize);
+
+        }
+        Log.i(TAG2, "Loopback exit");
+        return;
+    }
+
+    public AudioTrack findAudioTrack (AudioTrack track)
+    {
+        Log.d(TAG2, "===== Initializing AudioTrack API ====");
+        int m_bufferSize = AudioTrack.getMinBufferSize(8000,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+
+        if (m_bufferSize != AudioTrack.ERROR_BAD_VALUE)
+        {
+            track = new AudioTrack(AudioManager.STREAM_MUSIC, 8000,
+                    AudioFormat.CHANNEL_OUT_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT, m_bufferSize,
+                    AudioTrack.MODE_STREAM);
+
+            if (track.getState() == AudioTrack.STATE_UNINITIALIZED) {
+                Log.e(TAG2, "===== AudioTrack Uninitialized =====");
+                return null;
             }
         }
+        return track;
     }
 
-    private void startRecordAndPlay()
+    public AudioRecord findAudioRecord (AudioRecord recorder)
     {
-        record.startRecording();
-        track.play();
-        isRecording = true;
-    }
+        Log.d(TAG2, "===== Initializing AudioRecord API =====");
+        int m_bufferSize = AudioRecord.getMinBufferSize(8000,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
 
-/*    CompoundButton.OnCheckedChangeListener recordButtonListener = new CompoundButton.OnCheckedChangeListener(){
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (!isChecked){
-                recorder.stop();
-                ch.stop();
-                recorder.reset();
-                recording = false;
-                //saveButton.setEnabled(true);
-                //deleteButton.setEnabled(true);
-                //recordButton.setEnabled(false);
-            } // fim do else
-        } // fim do método
-    };*/
-
-    /*
-    private void initRecordAndTrack()
-    {
-        int min = AudioRecord.getMinBufferSize(8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        record = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION, 8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
-                min);
-        int maxJitter = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        track = new AudioTrack(AudioManager.MODE_IN_COMMUNICATION, 8000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, maxJitter,
-                AudioTrack.MODE_STREAM);
-    }
-
-    private void recordAndPlay()
-    {
-        short[] lin = new short[1024];
-        int num = 0;
-        am.setMode(AudioManager.MODE_IN_COMMUNICATION);
-        while (true)
+        if (m_bufferSize != AudioRecord.ERROR_BAD_VALUE)
         {
-            if (isRecording)
-            {
-                num = record.read(lin, 0, 1024);
-                track.write(lin, 0, num);
+            recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, 8000,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT, m_bufferSize);
+
+            if (recorder.getState() == AudioRecord.STATE_UNINITIALIZED) {
+                Log.e(TAG2, "====== AudioRecord UnInitilaised ====== ");
+                return null;
             }
         }
+        return recorder;
     }
-
-    private void startRecordAndPlay()
-    {
-        record.startRecording();
-        track.play();
-        isRecording = true;
-    }
-
-    private void stopRecordAndPlay()
-    {
-        record.stop();
-        track.pause();
-        isRecording = false;
-    }*/
 
 }
