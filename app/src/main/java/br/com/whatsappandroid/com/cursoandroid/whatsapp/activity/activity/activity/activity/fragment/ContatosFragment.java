@@ -113,6 +113,7 @@ public class ContatosFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SavedRecordings.class);
                 intent.putExtra("nome", listaPacientes.get(i).getNome());
                 intent.putExtra("idPaciente", listaPacientes.get(i).getId());
+                intent.putExtra("emailPaciente", listaPacientes.get(i).getEmail());
 
                 startActivity( intent );
             }

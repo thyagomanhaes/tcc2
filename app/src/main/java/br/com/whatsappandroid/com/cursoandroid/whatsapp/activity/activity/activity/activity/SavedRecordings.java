@@ -56,6 +56,8 @@ public class SavedRecordings extends ListActivity {
 
     private String nomePaciente;
     private int idPacienteSelecionado;
+    private String emailPaciente;
+
     private TextView nomePacienteView;
     private TextView idPacienteView;
 
@@ -67,6 +69,7 @@ public class SavedRecordings extends ListActivity {
         Intent intent = getIntent();
         nomePaciente = (String) intent.getSerializableExtra("nome");
         idPacienteSelecionado = (int) intent.getSerializableExtra("idPaciente");
+        emailPaciente = (String) intent.getSerializableExtra("emailPaciente");
 
         nomePacienteView = (TextView) findViewById(R.id.nomePaciente);
         idPacienteView = (TextView) findViewById(R.id.idPaciente);
@@ -269,6 +272,7 @@ public class SavedRecordings extends ListActivity {
         Intent intent = new Intent(SavedRecordings.this, GravacaoActivity.class);
         intent.putExtra("nomeGravacao", name);
         intent.putExtra("nomePaciente", nomePaciente);
+        intent.putExtra("emailPaciente", emailPaciente);
         //intent.putExtra("idPaciente", idPacienteSelecionado);
         startActivity( intent );
 

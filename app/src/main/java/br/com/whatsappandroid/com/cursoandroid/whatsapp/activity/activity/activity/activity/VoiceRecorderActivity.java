@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,6 +41,8 @@ public class VoiceRecorderActivity extends AppCompatActivity {
     private Button saveButton;
     //private Button deleteButton;
 
+    private Chronometer ch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         visualizer = (VisualizerView) findViewById(R.id.visualizerView2);
         recordButton = (ToggleButton) findViewById(R.id.recordButton2);
         saveButton = (Button) findViewById(R.id.saveButton2);
+        ch = (Chronometer) findViewById(R.id.chronometer);
 
         handler = new Handler();
 
@@ -154,6 +159,8 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                     recorder.setOutputFile(tempFile.getAbsolutePath());
                     recorder.prepare();
                     recorder.start();
+                    ch.setBase(SystemClock.elapsedRealtime());
+                    ch.start();
                     recording = true;
                     handler.post(updateVisualizer);
                 } // fim do try
@@ -167,6 +174,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 recorder.stop();
                 recorder.reset();
                 recording = false;
+                ch.stop();
                 saveButton.setEnabled(true);
                 //deleteButton.setEnabled(true);
                 recordButton.setEnabled(false);

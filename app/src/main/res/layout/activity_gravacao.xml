@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/idPaciente"
+        android:id="@+id/emailPaciente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -40,8 +40,8 @@
         android:textColor="#000"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:layout_below="@+id/idPaciente"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/textView4"
+        android:layout_alignStart="@+id/playButton" />
 
     <TextView
         android:id="@+id/textView4"
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="250dp"
         app:borderWidth="5dip"
-        android:layout_below="@+id/textView4"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
     <ToggleButton
@@ -78,13 +78,11 @@
         android:id="@+id/tempo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/playButton"
-        android:layout_alignBottom="@+id/playButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="19dp"
         android:text="duração"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#000" />
+        android:textColor="#000"
+        android:layout_alignBottom="@+id/playButton"
+        android:layout_alignEnd="@+id/editText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -93,9 +91,8 @@
         android:text="Small Text"
         android:id="@+id/textView2"
         android:textColor="#000"
-        android:layout_alignBaseline="@+id/playButton"
-        android:layout_alignBottom="@+id/playButton"
-        android:layout_alignStart="@+id/editText" />
+        android:layout_alignTop="@+id/playButton"
+        android:layout_alignEnd="@+id/tempo" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -120,9 +117,9 @@
         android:layout_height="50dp"
         android:src="@drawable/bpm"
         android:id="@+id/imageView6"
-        android:layout_below="@+id/nomeGravacao"
+        android:layout_above="@+id/myvisualizerview"
         android:layout_alignEnd="@+id/nomePaciente"
-        android:layout_marginTop="21dp" />
+        android:layout_marginBottom="18dp" />
 
     <EditText
         android:id="@+id/editText"
@@ -131,7 +128,7 @@
         android:background="@android:color/background_light"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Anotação"
+        android:text="Normal Heart Beat"
         android:padding="5dp"
         android:textColor="#000"
         android:textStyle="italic"

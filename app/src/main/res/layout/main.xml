@@ -33,4 +33,16 @@
         android:layout_marginStart="26dp"
         android:id="@+id/saveButton2"/>
 
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="Chronometer"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="40sp" />
+
 </RelativeLayout>

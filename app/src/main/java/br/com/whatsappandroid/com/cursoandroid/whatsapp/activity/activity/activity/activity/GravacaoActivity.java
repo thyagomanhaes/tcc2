@@ -39,6 +39,7 @@ public class GravacaoActivity extends AppCompatActivity {
     //Declarando os componentes da View
     private TextView nomePacienteTextView;
     private TextView nomeGravacaoTextView;
+    private TextView emailPacienteTextView;
     private TextView tempoView;
     private TextView tempoView2;
 
@@ -53,6 +54,7 @@ public class GravacaoActivity extends AppCompatActivity {
 
     private String nomePaciente;
     private String nomeGravacao;
+    private String emailPaciente;
     private int idPacienteSelecionado;
 
     private double startTime = 0;
@@ -75,14 +77,18 @@ public class GravacaoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         nomePaciente = (String) intent.getSerializableExtra("nomePaciente");
         nomeGravacao = (String) intent.getSerializableExtra("nomeGravacao");
+        emailPaciente = (String) intent.getSerializableExtra("emailPaciente");
 
         nomeGravacaoTextView = (TextView) findViewById(R.id.nomeGravacao);
         nomePacienteTextView = (TextView) findViewById(R.id.nomePaciente);
+        emailPacienteTextView= (TextView) findViewById(R.id.emailPaciente);
+
         playButton = (ToggleButton) findViewById(R.id.playButton);
         anotacaoImageView = (ImageView) findViewById(R.id.imageView4); // Botão para abrir uma caixa de dialogo para anotação sobre o áudio do paciente
 
         nomeGravacaoTextView.setText( nomeGravacao );
         nomePacienteTextView.setText( nomePaciente );
+        emailPacienteTextView.setText( emailPaciente );
 
         tempoView = (TextView) findViewById(R.id.tempo);
         tempoView2 = (TextView) findViewById(R.id.textView2);
@@ -230,6 +236,7 @@ public class GravacaoActivity extends AppCompatActivity {
                 .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         mVisualizer.setEnabled(false);
+                        playButton.setChecked(false);
                     }
                 });
         mMediaPlayer.start();

@@ -20,6 +20,7 @@ public class CadastroPaciente extends AppCompatActivity {
     private Button btCancelar;
     private EditText id;
     private EditText nome;
+    private EditText email;
 
 
 
@@ -34,6 +35,7 @@ public class CadastroPaciente extends AppCompatActivity {
 
         id = (EditText) findViewById(R.id.textID);
         nome = (EditText) findViewById(R.id.textNome);
+        email = (EditText) findViewById(R.id.editTextEmail);
 
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +46,7 @@ public class CadastroPaciente extends AppCompatActivity {
         Paciente paciente = new Paciente();
         paciente.setNome(nome.getText().toString());
         paciente.setId(Integer.parseInt(id.getText().toString()));
+        paciente.setEmail(email.getText().toString());
 
         realm.copyToRealm(paciente);
 
@@ -52,7 +55,7 @@ public class CadastroPaciente extends AppCompatActivity {
         realm.commitTransaction();
         realm.close();
 
-        Intent intent = new Intent(CadastroPaciente.this, ContatosFragment.class);
+        Intent intent = new Intent(CadastroPaciente.this, MainActivity.class);
         startActivity( intent );
         finish();
 

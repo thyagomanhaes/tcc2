@@ -70,6 +70,7 @@ public class ConversasFragment extends Fragment {
     byte buffer[] = new byte[bufferSize];
     private Button botaoStart;
     private Button botaoStop;
+    private int amplitudeCalculada;
 
 
 
@@ -103,7 +104,9 @@ public class ConversasFragment extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG2, "======== Start Button Pressed ==========");
                 isRunning = true;
-                do_loopback(isRunning);
+                do_loopback(isRunning); // primeira
+                handler.post(updateVisualizer);
+
             }
         });
 
@@ -116,14 +119,7 @@ public class ConversasFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
-
-        ImageView imageView = (ImageView) view.findViewById(R.id.imageView); // Gif 1
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);   // Gif 1
         ImageView imageView2 = (ImageView) view.findViewById(R.id.imageView2); // Gif 2
 
         //load with glide but you can download image gif or share link
@@ -187,9 +183,9 @@ public class ConversasFragment extends Fragment {
     Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
-            if (recording){
-                int x = recorder.getMaxAmplitude();
-                visualizer.addAmplitude(x);
+            if (isRunning){
+                //int x = recorder.getMaxAmplitude();
+                visualizer.addAmplitude(amplitudeCalculada);
                 visualizer.invalidate();
                 handler.postDelayed(this, 50);
             }
@@ -205,6 +201,7 @@ public class ConversasFragment extends Fragment {
         });
         m_thread.start();
     }
+
 
     public void run_loop (boolean isRunning)
     {
@@ -257,15 +254,30 @@ public class ConversasFragment extends Fragment {
     /* Recording and Playing in chunks of 320 bytes */
         bufferSize = 320;
 
+        int cAmplitude = 0;
+
         while (isRunning == true)
         {
         /* Read & Write to the Device */
             recorder2.read(buffer, 0, bufferSize);
-            track.write(buffer, 0, bufferSize);
 
+            amplitudeCalculada = calculateDecibel(buffer);
+
+            track.write(buffer, 0, bufferSize);
         }
         Log.i(TAG2, "Loopback exit");
         return;
+    }
+
+    public int calculateDecibel(byte[] buf){
+        int sum = 0;
+        for (int i=0; i < bufferSize; i++){
+            sum += Math.abs(buffer[i]);
+        }
+        return sum/bufferSize;
+    }
+    public short getShort(byte argB1, byte argB2){
+        return (short)(argB1 | (argB2 << 8));
     }
 
     public AudioTrack findAudioTrack (AudioTrack track)
