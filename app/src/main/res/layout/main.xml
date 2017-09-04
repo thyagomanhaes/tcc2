@@ -18,20 +18,21 @@
     <ToggleButton
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:layout_marginStart="34dp"
         android:textOff="Gravar"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/recordButton2" />
+        android:textOn="Parar"
+        android:id="@+id/recordButton2"
+        android:layout_below="@+id/visualizerView2"
+        android:layout_toStartOf="@+id/saveButton2"
+        android:layout_marginEnd="57dp" />
 
     <Button
         android:layout_width="100dp"
         android:layout_height="60dp"
         android:text="Salvar"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/recordButton2"
-        android:layout_marginStart="26dp"
-        android:id="@+id/saveButton2"/>
+        android:id="@+id/saveButton2"
+        android:layout_below="@+id/visualizerView2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="63dp" />
 
     <Chronometer
         android:id="@+id/chronometer"
@@ -44,5 +45,13 @@
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/amplitudes"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textColor="#000"
+        android:layout_alignTop="@+id/chronometer"
+        android:layout_toStartOf="@+id/recordButton2" />
 
 </RelativeLayout>

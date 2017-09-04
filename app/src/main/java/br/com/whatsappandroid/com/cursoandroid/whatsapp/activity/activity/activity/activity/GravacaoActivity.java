@@ -135,14 +135,14 @@ public class GravacaoActivity extends AppCompatActivity {
                         oneTimeOnly = 1;
                     }
 
-                    tempoView.setText(String.format("%d min, %d sec",
+                    tempoView.setText(String.format("%d:%d",
                             TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                             finalTime)))
                     );
 
-                    tempoView2.setText(String.format("%d min, %d sec",
+                    tempoView2.setText(String.format("%d:%d",
                             TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
@@ -197,7 +197,7 @@ public class GravacaoActivity extends AppCompatActivity {
     Runnable UpdateSongTime = new Runnable() {
         public void run() {
             startTime = mediaPlayer.getCurrentPosition();
-            tempoView2.setText(String.format("%d min, %d sec",
+            tempoView2.setText(String.format("0%d:0%d",
                     TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.

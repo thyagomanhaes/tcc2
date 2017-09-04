@@ -109,7 +109,7 @@
         android:layout_height="50dp"
         android:src="@drawable/ic_share"
         android:id="@+id/imageView5"
-        android:layout_alignTop="@+id/playButton"
+        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/imageView4" />
 
     <ImageView

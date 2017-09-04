@@ -2,6 +2,7 @@ package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activ
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -16,12 +17,16 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.R;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView;
@@ -43,6 +48,10 @@ public class VoiceRecorderActivity extends AppCompatActivity {
 
     private Chronometer ch;
 
+    private List<Integer> amplitudes;
+    private TextView qtdAmplitudes;
+    private int total = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +61,10 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         recordButton = (ToggleButton) findViewById(R.id.recordButton2);
         saveButton = (Button) findViewById(R.id.saveButton2);
         ch = (Chronometer) findViewById(R.id.chronometer);
+        qtdAmplitudes = (TextView) findViewById(R.id.amplitudes);
 
         handler = new Handler();
-
+        amplitudes = new ArrayList<Integer>();
 
         recordButton.setOnCheckedChangeListener(recordButtonListener);
 
@@ -90,6 +100,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                             gravacao.setIdGravacao(nextId);
                             gravacao.setNome(name); // nome da gravação informada pelo usuario
                             gravacao.setDataGravacao(new Date());
+                            gravacao.setBpm(String.valueOf(total));
                             //gravacao.setArquivoAudio(newFile);
 
                             realm.copyToRealm(gravacao);
@@ -127,6 +138,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         public void run() {
             if (recording){
                 int x = recorder.getMaxAmplitude();
+                amplitudes.add(x);
                 visualizer.addAmplitude(x);
                 visualizer.invalidate();
                 handler.postDelayed(this, 50);
@@ -178,6 +190,14 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 saveButton.setEnabled(true);
                 //deleteButton.setEnabled(true);
                 recordButton.setEnabled(false);
+
+                for (Integer valor : amplitudes){
+                    if (valor > 4000)
+                        total += valor;
+                    Log.d("AMPLITUDE", String.valueOf(valor));
+                }
+                qtdAmplitudes.setText(String.valueOf(total*6) + "BPM");
+
             } // fim do else
         } // fim do método
     };
