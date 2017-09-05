@@ -30,6 +30,8 @@ public class VisualizerView extends View {
         linePaint = new Paint(); // cria Paint para linhas
         linePaint.setColor(Color.RED); // configura a cor como verde
         linePaint.setStrokeWidth(LINE_WIDTH); // configura a largura do traço
+        linePaint.setStyle(Paint.Style.FILL);
+        getRootView().setBackgroundColor(Color.LTGRAY);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class VisualizerView extends View {
             // desenha uma linha representando esse item do ArrayList amplitudes
             canvas.drawLine(curX, middle + scaledHeight / 2, curX,
                         middle - scaledHeight / 2, linePaint);
+
         } // fim do for
     }
 }

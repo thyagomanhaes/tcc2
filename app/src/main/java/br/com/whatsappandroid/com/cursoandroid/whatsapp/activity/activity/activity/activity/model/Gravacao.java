@@ -19,6 +19,8 @@ public class Gravacao extends RealmObject {
     private Date dataGravacao;
     private float duracaoGravacao;
     private String anotacao;
+    private String bpm;
+
     //private File arquivoAudio;
 
     public int getIdGravacao() {
@@ -61,7 +63,15 @@ public class Gravacao extends RealmObject {
         this.anotacao = anotacao;
     }
 
-/*    public File getArquivoAudio() {
+    public String getBpm() {
+        return bpm;
+    }
+
+    public void setBpm(String bpm) {
+        this.bpm = bpm;
+    }
+
+   /*    public File getArquivoAudio() {
         return arquivoAudio;
     }
 

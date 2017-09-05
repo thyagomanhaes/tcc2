@@ -183,9 +183,9 @@ public class ConversasFragment extends Fragment {
     Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
-            if (isRunning){
-                //int x = recorder.getMaxAmplitude();
-                visualizer.addAmplitude(amplitudeCalculada);
+            if (recording){
+                int x = recorder.getMaxAmplitude();
+                visualizer.addAmplitude(x);
                 visualizer.invalidate();
                 handler.postDelayed(this, 50);
             }
