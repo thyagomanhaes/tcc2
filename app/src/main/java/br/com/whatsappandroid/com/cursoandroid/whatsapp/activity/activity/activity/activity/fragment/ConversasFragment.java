@@ -76,9 +76,11 @@ public class ConversasFragment extends Fragment {
     private int amplitudeCalculada;
 
     private TextView dataHora;
+    private double lastLevel = 0;
 
 
-
+    private static final float MAX_REPORTABLE_AMP = 32767f;
+    private static final float MAX_REPORTABLE_DB = 90.3087f;
 
     public ConversasFragment() {
         // Required empty public constructor
@@ -116,13 +118,23 @@ public class ConversasFragment extends Fragment {
         botaoStart = (Button) view.findViewById(R.id.StartButton);
         botaoStop = (Button) view.findViewById(R.id.StopButton);
 
+        handler = new Handler();
+
+
         botaoStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG2, "======== Start Button Pressed ==========");
                 isRunning = true;
                 do_loopback(isRunning); // primeira
-                //handler.post(updateVisualizer);
+
+
+                //recorder2 = new AudioRecord(MediaRecorder.AudioSource.MIC, 8000,
+                 //       AudioFormat.CHANNEL_IN_MONO,
+                 //       AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+
+                //recorder2.startRecording();
+                handler.post(updateVisualizer);
 
             }
         });
@@ -133,6 +145,7 @@ public class ConversasFragment extends Fragment {
                 Log.d(TAG2, "======== Stop Button Pressed ==========");
                 isRunning = false;
                 do_loopback(isRunning);
+                //handler.post(updateVisualizer);
             }
         });
 
@@ -152,7 +165,7 @@ public class ConversasFragment extends Fragment {
                 .placeholder(R.drawable.heartbeat3)
                 .crossFade().into(imageView2);
 
-        handler = new Handler();
+
 
         auscultationButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -200,9 +213,9 @@ public class ConversasFragment extends Fragment {
     Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
-            if (recording){
-                int x = recorder.getMaxAmplitude();
-                visualizer.addAmplitude(x);
+            if (isRunning){
+                //int x = recorder.getMaxAmplitude();
+                visualizer.addAmplitude(amplitudeCalculada);
                 visualizer.invalidate();
                 handler.postDelayed(this, 50);
             }
@@ -219,6 +232,29 @@ public class ConversasFragment extends Fragment {
         m_thread.start();
     }
 
+    private void readAudioBuffer() {
+
+        try {
+            short[] buffer = new short[bufferSize];
+
+            int bufferReadResult = 1;
+
+            if (recorder2 != null) {
+
+                // Sense the voice...
+                bufferReadResult = recorder2.read(buffer, 0, bufferSize);
+                double sumLevel = 0;
+                for (int i = 0; i < bufferReadResult; i++) {
+                    sumLevel += buffer[i];
+                }
+                lastLevel = Math.abs((sumLevel / bufferReadResult));
+                Log.d("LAST LEVEL", String.valueOf(lastLevel));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void run_loop (boolean isRunning)
     {
@@ -272,29 +308,49 @@ public class ConversasFragment extends Fragment {
         bufferSize = 320;
 
         int cAmplitude = 0;
+        int bufferReadResult = 1;
 
         while (isRunning == true)
         {
         /* Read & Write to the Device */
             recorder2.read(buffer, 0, bufferSize);
 
-            amplitudeCalculada = calculateDecibel(buffer);
+/*            double sumLevel = 0;
+            for (int i =0; i < bufferReadResult ; i++){
+                sumLevel += buffer[i];
+            }
+            amplitudeCalculada = (int) Math.abs( (sumLevel/bufferReadResult))*1000;*/
 
+/*            int max = 0;
+            for (short s : buffer){
+                amplitudeCalculada = Math.abs(s) * 100;
+                Log.d("AMPLITUDE", String.valueOf(Math.abs(s)));
+            }*/
+
+
+/*
+            //int readSize = recorder2.read(buffer, 0, buffer.length);
+            int sum = 0;
+            double amplitude = 0;
+            for (int i = 0; i < bufferReadSize; i++ ){
+                sum += Math.abs(buffer[i]);
+            }
+            if (bufferReadSize > 0){
+                amplitude = sum / bufferReadSize;
+                //amplitudeCalculada = (int) Math.sqrt(amplitude);
+            }
+            //amplitudeCalculada = (int) (MAX_REPORTABLE_DB + (20 * Math.log10(amplitude / MAX_REPORTABLE_AMP)));
+            Log.d("AMPLITUDE", String.valueOf(amplitude));
+            //amplitudeCalculada = calculateDecibel(buffer);
+*/
+            //Log.d("AMPLITUDE", String.valueOf(amplitudeCalculada));
             track.write(buffer, 0, bufferSize);
+            amplitudeCalculada = (buffer[0] & 0xff) << 8 | buffer[1];
+            amplitudeCalculada = Math.abs(amplitudeCalculada);
+            Log.d("AMPLITUDE", String.valueOf(amplitudeCalculada));
         }
         Log.i(TAG2, "Loopback exit");
         return;
-    }
-
-    public int calculateDecibel(byte[] buf){
-        int sum = 0;
-        for (int i=0; i < bufferSize; i++){
-            sum += Math.abs(buffer[i]);
-        }
-        return sum/bufferSize;
-    }
-    public short getShort(byte argB1, byte argB2){
-        return (short)(argB1 | (argB2 << 8));
     }
 
     public AudioTrack findAudioTrack (AudioTrack track)

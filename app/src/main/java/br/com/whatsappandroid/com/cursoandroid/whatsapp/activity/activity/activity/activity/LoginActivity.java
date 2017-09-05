@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email;
     private EditText senha;
     private Button botaoLogar;
+    private TextView textoCadastro;
+
     private Usuario usuario;
     private FirebaseAuth autenticacao;
 
@@ -39,6 +42,15 @@ public class LoginActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.edit_login_email);
         senha = (EditText) findViewById(R.id.edit_login_senha);
         botaoLogar = (Button) findViewById(R.id.bt_logar);
+        textoCadastro = (TextView) findViewById(R.id.textCadastro);
+
+        textoCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirCadastroUsuario(view);
+            }
+        });
+
 
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
