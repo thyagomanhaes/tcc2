@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,10 @@ public class ContatosFragment extends Fragment {
 
     private Realm realm;
     private List<Paciente> listaPacientes;
+
+    private TextView emptyView;
+    private View viewVazio;
+    private TextView dataHora;
 
     public ContatosFragment() {
         // Required empty public constructor
@@ -91,7 +96,12 @@ public class ContatosFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contatos, container, false);
 
+        viewVazio = inflater.inflate(R.layout.contatos_vazio, container, false);
+
+
         listView = (ListView) view.findViewById(R.id.lv_contatos);
+        emptyView = (TextView) view.findViewById(R.id.empty);
+        listView.setEmptyView(emptyView);
 
 /*        adapter = new ArrayAdapter(
                 getActivity(),

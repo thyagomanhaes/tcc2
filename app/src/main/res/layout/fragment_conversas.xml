@@ -9,8 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp"
         android:id="@+id/linearLayout"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
@@ -20,77 +18,98 @@
             android:layout_width="100dp"
             android:layout_height="100dp" />
 
-        <Chronometer
-            android:id="@+id/chronometer2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="27dp"
-            android:text="Chronometer"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-            android:textSize="40sp" />
-
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
-            android:layout_height="100dp"
-        />
-
+            android:layout_height="100dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:text="25/09/2017"
+        android:padding="10dip"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
+
+    <Chronometer
+        android:id="@+id/chronometer2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:text="00:00"
+        android:padding="10dip"
+        android:layout_below="@+id/data"
+        android:layout_centerHorizontal="true" />
+
 
     <!-- TODO: Update blank fragment layout -->
     <view
         android:id="@+id/visualizerView"
         class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView"
         id="@+id/view"
-        android:layout_width="400dp"
-        android:layout_height="300dp"
-        android:layout_marginBottom="41dp"
-        android:layout_above="@+id/btAuscultation"
-        android:layout_alignParentStart="true" />
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chronometer2"
+        android:layout_marginBottom="33dp" />
 
 
-
-
-
-    <ToggleButton
-        android:id="@+id/btAuscultation"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:checked="false"
-        android:padding="10dp"
-        android:text="ToggleButton"
-        android:textOff="INICIAR AUSCULTAÇÃO"
-        android:textOn="PARAR"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="42dp"
+        android:id="@+id/linearLayout2">
 
-    <Button
-        android:id="@+id/StartButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="START"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_below="@+id/visualizerView"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_alignBaseline="@+id/btAuscultation"
+            android:layout_alignBottom="@+id/btAuscultation"
+            android:layout_alignParentStart="true" />
 
-    <Button
-        android:id="@+id/StopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STOP"
-        tools:layout_constraintTop_creator="1"
-        app:layout_constraintTop_toBottomOf="@+id/StartButton"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_below="@+id/visualizerView"
-        android:layout_alignParentEnd="true" />
+        <ToggleButton
+            android:id="@+id/btAuscultation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:checked="false"
+            android:padding="10dp"
+            android:text="ToggleButton"
+            android:textOff="INICIAR AUSCULTAÇÃO"
+            android:textOn="PARAR"
+            android:layout_below="@+id/StopButton"
+            android:layout_centerHorizontal="true" />
+
+
+
+        <Button
+            android:id="@+id/StopButton"
+            android:layout_width="126dp"
+            android:layout_height="wrap_content"
+            android:text="STOP"
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintTop_toBottomOf="@+id/StartButton"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_below="@+id/visualizerView"
+            android:layout_alignParentEnd="true" />
+
+    </LinearLayout>
+
+
+
 
 </RelativeLayout>

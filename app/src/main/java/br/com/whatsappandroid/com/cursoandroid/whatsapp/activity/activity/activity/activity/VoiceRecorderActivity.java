@@ -61,7 +61,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         recordButton = (ToggleButton) findViewById(R.id.recordButton2);
         saveButton = (Button) findViewById(R.id.saveButton2);
         ch = (Chronometer) findViewById(R.id.chronometer);
-        qtdAmplitudes = (TextView) findViewById(R.id.amplitudes);
+        qtdAmplitudes = (TextView) findViewById(R.id.amplitudes2);
 
         handler = new Handler();
         amplitudes = new ArrayList<Integer>();

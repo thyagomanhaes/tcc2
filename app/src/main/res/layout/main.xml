@@ -47,7 +47,7 @@
         android:textSize="40sp" />
 
     <TextView
-        android:id="@+id/amplitudes"
+        android:id="@+id/amplitudes2"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:textColor="#000"

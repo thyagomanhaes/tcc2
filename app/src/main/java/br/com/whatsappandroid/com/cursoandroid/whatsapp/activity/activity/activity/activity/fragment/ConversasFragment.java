@@ -35,7 +35,10 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.R;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.GravadorActivity;
@@ -72,6 +75,8 @@ public class ConversasFragment extends Fragment {
     private Button botaoStop;
     private int amplitudeCalculada;
 
+    private TextView dataHora;
+
 
 
 
@@ -94,6 +99,18 @@ public class ConversasFragment extends Fragment {
         visualizer = (VisualizerView) view.findViewById(R.id.visualizerView); // Visualizador para o gráfico
         ch = (Chronometer) view.findViewById(R.id.chronometer2); // Cronômetro
         auscultationButton = (ToggleButton) view.findViewById(R.id.btAuscultation); // Botão para Iniciar/Pausar Auscultação
+        dataHora =(TextView) view.findViewById(R.id.data);
+
+        String data = "dd/MM/yyyy";
+        String hora = "h:mm a";
+        String data1, hora1;
+        java.util.Date agora = new java.util.Date();;
+        SimpleDateFormat formata = new SimpleDateFormat(data);
+        data1 = formata.format(agora);
+        formata = new SimpleDateFormat(hora);
+        hora1 = formata.format(agora);
+
+        dataHora.setText(data1 + " - " + hora1);
 
         // PEGANDO O BOTÃO DE START E PAUSA
         botaoStart = (Button) view.findViewById(R.id.StartButton);
@@ -105,7 +122,7 @@ public class ConversasFragment extends Fragment {
                 Log.d(TAG2, "======== Start Button Pressed ==========");
                 isRunning = true;
                 do_loopback(isRunning); // primeira
-                handler.post(updateVisualizer);
+                //handler.post(updateVisualizer);
 
             }
         });

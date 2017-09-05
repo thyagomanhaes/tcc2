@@ -13,4 +13,13 @@
         android:divider="#CCCCCC"
         android:dividerHeight="1dp"
         android:layout_gravity="center_horizontal|top" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Você não possui pacientes cadastrados."
+        android:textColor="#000" />
+
 </FrameLayout>

@@ -1,20 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip">
+    
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        >
+
+        <ImageView
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:src="@drawable/ic_person"
+            android:id="@+id/imageView7"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
+
     <TextView
+        android:id="@+id/txtNome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Rihanna Love the way lie"
+        android:textColor="#040404"
+        android:typeface="sans"
+        android:textSize="20dip"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtEnd"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtNome"
+        android:textSize="15dip"
+        android:layout_marginTop="1dip"
+        android:textColor="@android:color/darker_gray"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Just gona stand there and ..." />
+
+    <ImageView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+
+<!--    <TextView
         android:text="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtNome"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
         android:textStyle="bold"
         android:textSize="20sp"
         android:padding="10dp"
-        android:textColor="@android:color/black"></TextView>
+        android:textColor="@android:color/black"
+        android:layout_marginStart="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView7"></TextView>
 
     <TextView android:text="@+id/sub"
-        android:layout_below="@+id/txtNome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtEnd"
@@ -22,7 +74,9 @@
         android:textColor="@android:color/darker_gray"
         android:paddingLeft="10dp"
         android:paddingBottom="5dp"
-        android:textSize="15sp"></TextView>
+        android:textSize="15sp"
+        android:layout_below="@+id/txtNome"
+        android:layout_alignStart="@+id/txtNome"></TextView>
 
     <ImageView
         android:id="@+id/imageView3"
@@ -30,9 +84,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4px"
         android:layout_marginRight="10px"
-        android:src="@drawable/ic_action_arrow_right"
+        android:src="@drawable/ic_keyboard_arrow_right"
         android:layout_alignBottom="@+id/txtNome"
-        android:layout_alignParentEnd="true"></ImageView>
+        android:layout_alignParentEnd="true"></ImageView>-->
 </RelativeLayout>
 
 
