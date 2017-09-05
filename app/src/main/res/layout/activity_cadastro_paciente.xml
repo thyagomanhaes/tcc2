@@ -75,7 +75,7 @@
         android:layout_marginEnd="90dp" />
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/editEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/textID"

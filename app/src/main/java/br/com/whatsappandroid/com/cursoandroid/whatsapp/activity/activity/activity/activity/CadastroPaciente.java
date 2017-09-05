@@ -35,7 +35,7 @@ public class CadastroPaciente extends AppCompatActivity {
 
         id = (EditText) findViewById(R.id.textID);
         nome = (EditText) findViewById(R.id.textNome);
-        email = (EditText) findViewById(R.id.editTextEmail);
+        email = (EditText) findViewById(R.id.editEmail);
 
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
