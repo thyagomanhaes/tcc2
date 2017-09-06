@@ -32,21 +32,21 @@
         android:textStyle="bold" />
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/lv_gravacoes"
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_width="match_parent"
         android:layout_height="387dp"
         android:layout_margin="2dp"
-        android:background="@android:color/holo_orange_light"
+        android:background="@android:color/holo_red_dark"
         android:divider="#CCCCCC"
-        android:dividerHeight="1dp"
+        android:dividerHeight="2dp"
         android:layout_weight="0.51" />
 
     <Button
         android:id="@+id/btNovaGravacao"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nova Gravação"
-        />
+        android:layout_height="68dp"
+        android:padding="16dp"
+        android:text="Nova Gravação" />
 
 </LinearLayout>

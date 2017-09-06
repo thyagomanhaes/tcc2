@@ -17,32 +17,31 @@
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp" />
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="25/09/2017"
+            android:padding="10dip"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true" />
+
+        <Chronometer
+            android:id="@+id/chronometer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/data"
+            android:layout_centerHorizontal="true"
+            android:padding="10dip"
+            android:text="00:00"
+            android:textColor="#000" />
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
             android:layout_height="100dp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000"
-        android:text="25/09/2017"
-        android:padding="10dip"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
-
-    <Chronometer
-        android:id="@+id/chronometer2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000"
-        android:text="00:00"
-        android:padding="10dip"
-        android:layout_below="@+id/data"
-        android:layout_centerHorizontal="true" />
 
 
     <!-- TODO: Update blank fragment layout -->
@@ -54,7 +53,6 @@
         android:layout_height="250dp"
         android:layout_above="@+id/linearLayout2"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/chronometer2"
         android:layout_marginBottom="33dp" />
 
 

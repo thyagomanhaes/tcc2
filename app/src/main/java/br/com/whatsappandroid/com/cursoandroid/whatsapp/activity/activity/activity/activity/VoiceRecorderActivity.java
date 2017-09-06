@@ -52,10 +52,15 @@ public class VoiceRecorderActivity extends AppCompatActivity {
     private TextView qtdAmplitudes;
     private int total = 0;
 
+    private int idPacienteSelecionado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        Intent intent = getIntent();
+        idPacienteSelecionado = (int) intent.getSerializableExtra("idPacienteSelecionado");
 
         visualizer = (VisualizerView) findViewById(R.id.visualizerView2);
         recordButton = (ToggleButton) findViewById(R.id.recordButton2);
@@ -101,6 +106,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                             gravacao.setNome(name); // nome da gravação informada pelo usuario
                             gravacao.setDataGravacao(new Date());
                             gravacao.setBpm(String.valueOf(total));
+                            gravacao.setIdPaciente(idPacienteSelecionado);
                             //gravacao.setArquivoAudio(newFile);
 
                             realm.copyToRealm(gravacao);

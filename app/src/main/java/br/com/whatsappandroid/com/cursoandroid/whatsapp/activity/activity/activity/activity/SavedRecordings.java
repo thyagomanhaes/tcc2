@@ -1,5 +1,6 @@
 package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,11 +39,15 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.R;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.adapter.GravacaoAdapter;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.Gravacao;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.Paciente;
+import io.realm.Realm;
 
 /*import static br.com.whatsappandroid.com.cursoandroid.whatsapp.R.id.progressSeekBar;
 import static br.com.whatsappandroid.com.cursoandroid.whatsapp.R.id.view;*/
 
-public class SavedRecordings extends ListActivity {
+public class SavedRecordings extends Activity {
 
     private static final String TAG = SavedRecordings.class.getName();
 
@@ -61,6 +66,10 @@ public class SavedRecordings extends ListActivity {
     private TextView nomePacienteView;
     private TextView idPacienteView;
 
+    private List<Gravacao> listaGravacoes;
+    private Realm realm;
+    private ListView listView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +86,19 @@ public class SavedRecordings extends ListActivity {
         nomePacienteView.setText( "Nome: " + nomePaciente );
         idPacienteView.setText( "ID: " + String.valueOf(idPacienteSelecionado) );
 
-        ListView listView = getListView();
-        savedRecordingsAdapter = new SavedRecordingsAdapter(this, new ArrayList<String>(Arrays.asList(getExternalFilesDir(null).list())));
-        listView.setAdapter( savedRecordingsAdapter );
+        realm = Realm.getDefaultInstance();
+
+        listaGravacoes = realm.where(Gravacao.class).equalTo("nome","gravacao1").findAll();
+
+        listView = (ListView) findViewById(R.id.lv_gravacoes);
+
+        GravacaoAdapter adapter = new GravacaoAdapter(SavedRecordings.this, listaGravacoes);
+
+        listView.setAdapter( adapter );
+
+        //ListView listView = getListView();
+        //savedRecordingsAdapter = new SavedRecordingsAdapter(this, new ArrayList<String>(Arrays.asList(getExternalFilesDir(null).list())));
+        //listView.setAdapter( savedRecordingsAdapter );
 
         // Botão para Iniciar uma nova Gravação
         botaoNovaGravacao = (Button) findViewById(R.id.btNovaGravacao);
@@ -88,6 +107,7 @@ public class SavedRecordings extends ListActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SavedRecordings.this, VoiceRecorderActivity.class);
+                intent.putExtra("idPacienteSelecionado", idPacienteSelecionado);
                 startActivity( intent );
             }
         });
@@ -258,7 +278,7 @@ public class SavedRecordings extends ListActivity {
         }
     }
 
-    @Override
+/*    @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         //playPauseButton.setChecked(true);
@@ -277,7 +297,7 @@ public class SavedRecordings extends ListActivity {
         startActivity( intent );
 
 
-/*        try
+*//*        try
         {
             // configura MediaPlayer para reproduzir o arquivo em filePath
             mediaPlayer.reset(); // reconfigura MediaPlayer
@@ -297,7 +317,7 @@ public class SavedRecordings extends ListActivity {
 
             Log.e(TAG, e.toString()); // registra exceções
 
-        } // fim do catch*/
+        } // fim do catch*//*
 
-    }
+    }*/
 }
