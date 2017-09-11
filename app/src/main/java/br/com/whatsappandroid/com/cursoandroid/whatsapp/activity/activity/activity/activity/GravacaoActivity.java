@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,8 +44,14 @@ public class GravacaoActivity extends AppCompatActivity {
     private TextView emailPacienteTextView;
     private TextView tempoView;
     private TextView tempoView2;
+    private TextView bpmGravacao;
+    private TextView textoAnotacao;
 
-    private ToggleButton playButton;
+    private Button playButton;
+    private Button stopButton;
+    private Button botaotAnotacao;
+    private Button botaoExcluir;
+    private Button botaoCompartilhar;
     private ImageView anotacaoImageView;
 
     private Visualizer mVisualizer;
@@ -55,6 +63,9 @@ public class GravacaoActivity extends AppCompatActivity {
     private String nomePaciente;
     private String nomeGravacao;
     private String emailPaciente;
+    private String bpmGravacao2;
+    private int idGravacaoSelecionada;
+
     private int idPacienteSelecionado;
 
     private double startTime = 0;
@@ -65,6 +76,10 @@ public class GravacaoActivity extends AppCompatActivity {
     private int backwardTime = 5000;
 
     private static int oneTimeOnly = 0;
+
+
+    private Realm realm;
+    private Gravacao gravacaoAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,27 +93,43 @@ public class GravacaoActivity extends AppCompatActivity {
         nomePaciente = (String) intent.getSerializableExtra("nomePaciente");
         nomeGravacao = (String) intent.getSerializableExtra("nomeGravacao");
         emailPaciente = (String) intent.getSerializableExtra("emailPaciente");
+        bpmGravacao2 = (String) intent.getSerializableExtra("bpmGravacao");
+        idGravacaoSelecionada = (int) intent.getSerializableExtra("idGravacao");
 
         nomeGravacaoTextView = (TextView) findViewById(R.id.nomeGravacao);
         nomePacienteTextView = (TextView) findViewById(R.id.nomePaciente);
         emailPacienteTextView= (TextView) findViewById(R.id.emailPaciente);
+        bpmGravacao = (TextView) findViewById(R.id.bpm);
+        botaotAnotacao = (Button) findViewById(R.id.btAnotacao);
+        botaoExcluir = (Button) findViewById(R.id.btExcluir);
+        botaoCompartilhar = (Button) findViewById(R.id.btCompartilhar);
+        textoAnotacao = (TextView) findViewById(R.id.txtAnotacao);
 
-        playButton = (ToggleButton) findViewById(R.id.playButton);
-        anotacaoImageView = (ImageView) findViewById(R.id.imageView4); // Botão para abrir uma caixa de dialogo para anotação sobre o áudio do paciente
+        playButton = (Button) findViewById(R.id.btPlay);
+        stopButton = (Button) findViewById(R.id.btStop);
+
 
         nomeGravacaoTextView.setText( nomeGravacao );
         nomePacienteTextView.setText( nomePaciente );
         emailPacienteTextView.setText( emailPaciente );
+        bpmGravacao.setText( bpmGravacao2 );
 
-        tempoView = (TextView) findViewById(R.id.tempo);
-        tempoView2 = (TextView) findViewById(R.id.textView2);
+        realm = Realm.getDefaultInstance();
+        gravacaoAtual = new Gravacao();
+        gravacaoAtual = realm.where(Gravacao.class).equalTo("idGravacao", idGravacaoSelecionada).findFirst(); // fazendo a consulta com o ID selecionado no REALM
 
+        if (gravacaoAtual.getAnotacao() == null)
+            textoAnotacao.setText("Nada");
+        else
+            textoAnotacao.setText(gravacaoAtual.getAnotacao());
 
-        playButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        //tempoView = (TextView) findViewById(R.id.tempo);
+        //tempoView2 = (TextView) findViewById(R.id.textView2);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-                String filePath = getExternalFilesDir(null).getAbsolutePath() + File.separator + nomeGravacao;
+            public void onClick(View v) {
+                String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + nomeGravacao + ".wav";
 
 
                 try{
@@ -127,6 +158,7 @@ public class GravacaoActivity extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
                     mediaPlayer.start();
+                    playButton.setEnabled(false);
 
                     finalTime = mediaPlayer.getDuration();
                     startTime = mediaPlayer.getCurrentPosition();
@@ -135,7 +167,7 @@ public class GravacaoActivity extends AppCompatActivity {
                         oneTimeOnly = 1;
                     }
 
-                    tempoView.setText(String.format("%d:%d",
+/*                    tempoView.setText(String.format("%d:%d",
                             TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
@@ -147,7 +179,7 @@ public class GravacaoActivity extends AppCompatActivity {
                             TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                             startTime)))
-                    );
+                    );*/
 
                     myHandler.postDelayed(UpdateSongTime, 100);
 
@@ -167,8 +199,11 @@ public class GravacaoActivity extends AppCompatActivity {
             }
         });
 
+
+
+
         // Ação que será executada ao clicar na imagem de anotação
-        anotacaoImageView.setOnClickListener(new View.OnClickListener() {
+        botaotAnotacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(
@@ -182,6 +217,21 @@ public class GravacaoActivity extends AppCompatActivity {
                 inputDialog.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+
+                        Gravacao gravacaoAtual = new Gravacao();
+                        gravacaoAtual = realm.where(Gravacao.class).equalTo("idGravacao", idGravacaoSelecionada).findFirst();
+
+                        gravacaoAtual.setAnotacao(nameEditText.getText().toString()); // Salvando a anotação no objeto
+
+                        realm.copyToRealm(gravacaoAtual);
+
+                        realm.commitTransaction();
+                        realm.close();
+                        textoAnotacao.setText(nameEditText.getText().toString());
+
                      }
                 });
 
@@ -190,7 +240,34 @@ public class GravacaoActivity extends AppCompatActivity {
             }
         });
 
-        //initAudio();
+        botaoExcluir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.beginTransaction();
+                gravacaoAtual.deleteFromRealm();
+                realm.commitTransaction();
+
+                String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + nomeGravacao + ".wav";
+                File fileToDelete = new File(filePath);
+                fileToDelete.delete();
+
+                Toast.makeText(GravacaoActivity.this, "Gravação excluída com sucesso!", Toast.LENGTH_LONG).show();
+                //Intent intent = new Intent(GravacaoActivity.this, SavedRecordings.class);
+                //startActivity( intent );
+                finish();
+            }
+        });
+
+        botaoCompartilhar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GravacaoActivity.this,EnviarEmailActivity.class);
+                startActivity( intent );
+
+            }
+        });
+
+
 
     }
 
@@ -236,7 +313,7 @@ public class GravacaoActivity extends AppCompatActivity {
                 .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         mVisualizer.setEnabled(false);
-                        playButton.setChecked(false);
+                        playButton.setEnabled(true);
                     }
                 });
         mMediaPlayer.start();

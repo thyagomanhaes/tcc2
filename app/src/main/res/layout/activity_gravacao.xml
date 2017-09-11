@@ -6,53 +6,87 @@
     android:layout_height="match_parent"
     android:background="@color/fundo_gravacao">
 
-    <TextView
-        android:id="@+id/nomePaciente"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Nome Paciente"
-        android:textColor="#000"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/emailPaciente"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_gravity="center_horizontal"
-        android:text="24/08/2017  12:30 AM"
-        android:textColor="#000"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/nomePaciente"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/nomeGravacao"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Gravação.3gp"
-        android:textColor="#000"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_above="@+id/textView4"
-        android:layout_alignStart="@+id/playButton" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="70dp"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="70dp"
-        android:text="70"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:orientation="horizontal"
+        android:padding="5dip"
+        android:background="@drawable/fundo_degrade"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout2">
+
+        <TextView
+            android:id="@+id/nomePaciente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Nome Paciente"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/emailPaciente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="24/08/2017  12:30 AM"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/nomePaciente"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/nomeGravacao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="600_10-09-2017 - 17:41"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/emailPaciente"
+            android:layout_alignStart="@+id/emailPaciente" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/bpm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
         android:textColor="#000"
-        android:textSize="60sp"
-        android:layout_alignBottom="@+id/imageView6"
-        android:layout_toStartOf="@+id/imageView6" />
+        android:textSize="50dp"
+        android:paddingRight="10dp"
+        android:gravity="center"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bpm"
+        android:layout_alignBottom="@+id/bpm"
+        android:layout_toEndOf="@+id/bpm"
+        android:id="@+id/imageView3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ainda não cadastrado"
+        android:textSize="15dp"
+        android:textStyle="italic"
+        android:textColor="#864747"
+        android:id="@+id/txtAnotacao"
+        android:layout_below="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3" />
+
 
     <view
         android:id="@+id/myvisualizerview"
@@ -64,79 +98,77 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
-    <ToggleButton
-        android:id="@+id/playButton"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:textOff="PLAY"
-        android:textOn="STOP"
-        android:layout_above="@+id/editText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp" />
 
-    <TextView
-        android:id="@+id/tempo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="duração"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#000"
-        android:layout_alignBottom="@+id/playButton"
-        android:layout_alignEnd="@+id/editText" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textView2"
-        android:textColor="#000"
-        android:layout_alignTop="@+id/playButton"
-        android:layout_alignEnd="@+id/tempo" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_assignment"
-        android:layout_marginBottom="13dp"
-        android:layout_marginStart="13dp"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:padding="5dip"
+        android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true">
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_share"
-        android:id="@+id/imageView5"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/imageView4" />
+        <LinearLayout
+            android:id="@+id/thumbnail2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dip"
+            >
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/bpm"
-        android:id="@+id/imageView6"
-        android:layout_above="@+id/myvisualizerview"
-        android:layout_alignEnd="@+id/nomePaciente"
-        android:layout_marginBottom="18dp" />
+            <Button
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:background="@drawable/ic_action_share"
+                android:id="@+id/btCompartilhar"
+                android:layout_alignParentStart="true" />
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:background="@android:color/background_light"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Normal Heart Beat"
-        android:padding="5dp"
+        <Button
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/ic_description"
+            android:id="@+id/btAnotacao"
+            android:layout_alignTop="@+id/btExcluir"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/ic_delete"
+            android:id="@+id/btExcluir"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_action_playback_play"
+        android:layout_below="@+id/myvisualizerview"
+        android:layout_toStartOf="@+id/bpm" />
+
+    <Button
+        android:id="@+id/btStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_action_playback_stop"
+        android:layout_alignBaseline="@+id/btPlay"
+        android:layout_alignBottom="@+id/btPlay"
+        android:layout_toEndOf="@+id/btPlay"
+        android:layout_marginStart="18dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Diagnóstico Médico:"
         android:textColor="#000"
-        android:textStyle="italic"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignTop="@+id/imageView4"
-        android:layout_toEndOf="@+id/imageView4" />
+        android:textSize="15dp"
+        android:layout_below="@+id/btPlay"
+        android:layout_alignEnd="@+id/btStop" />
 
 </RelativeLayout>
 

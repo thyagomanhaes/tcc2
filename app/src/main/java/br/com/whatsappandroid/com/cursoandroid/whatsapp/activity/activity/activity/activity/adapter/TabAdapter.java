@@ -44,4 +44,6 @@ public class TabAdapter extends FragmentStatePagerAdapter{
     public CharSequence getPageTitle(int position) {
         return tituloAbas[ position ];
     }
+
+
 }

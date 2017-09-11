@@ -104,7 +104,7 @@ public class ConversasFragment extends Fragment {
         dataHora =(TextView) view.findViewById(R.id.data);
 
         String data = "dd/MM/yyyy";
-        String hora = "h:mm a";
+        String hora = "HH:mm";
         String data1, hora1;
         java.util.Date agora = new java.util.Date();;
         SimpleDateFormat formata = new SimpleDateFormat(data);
@@ -115,13 +115,13 @@ public class ConversasFragment extends Fragment {
         dataHora.setText(data1 + " - " + hora1);
 
         // PEGANDO O BOTÃO DE START E PAUSA
-        botaoStart = (Button) view.findViewById(R.id.StartButton);
-        botaoStop = (Button) view.findViewById(R.id.StopButton);
+        //botaoStart = (Button) view.findViewById(R.id.StartButton);
+        //botaoStop = (Button) view.findViewById(R.id.StopButton);
 
         handler = new Handler();
 
 
-        botaoStart.setOnClickListener(new View.OnClickListener() {
+/*        botaoStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG2, "======== Start Button Pressed ==========");
@@ -147,22 +147,22 @@ public class ConversasFragment extends Fragment {
                 do_loopback(isRunning);
                 //handler.post(updateVisualizer);
             }
-        });
+        });*/
 
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);   // Gif 1
         ImageView imageView2 = (ImageView) view.findViewById(R.id.imageView2); // Gif 2
 
         //load with glide but you can download image gif or share link
         Glide.with(getActivity())
-                .load(R.drawable.heartbeat3)
+                .load(R.drawable.heartbeat4)
                 .asGif()
-                .placeholder(R.drawable.heartbeat3)
+                .placeholder(R.drawable.heartbeat4)
                 .crossFade().into(imageView);
 
         Glide.with(getActivity())
-                .load(R.drawable.heartbeat3)
+                .load(R.drawable.heartbeat4)
                 .asGif()
-                .placeholder(R.drawable.heartbeat3)
+                .placeholder(R.drawable.heartbeat4)
                 .crossFade().into(imageView2);
 
 
@@ -213,16 +213,16 @@ public class ConversasFragment extends Fragment {
     Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
-            if (isRunning){
-                //int x = recorder.getMaxAmplitude();
-                visualizer.addAmplitude(amplitudeCalculada);
+            if (recording){
+                int x = recorder.getMaxAmplitude();
+                visualizer.addAmplitude(x);
                 visualizer.invalidate();
                 handler.postDelayed(this, 50);
             }
         }
     };
 
-    private void do_loopback(final boolean flag)
+    /*private void do_loopback(final boolean flag)
     {
         m_thread = new Thread(new Runnable() {
             public void run() {
@@ -259,7 +259,7 @@ public class ConversasFragment extends Fragment {
     public void run_loop (boolean isRunning)
     {
 
-        /** == If Stop Button is pressed == **/
+        *//** == If Stop Button is pressed == **//*
         if (isRunning == false) {
             Log.d(TAG2, "=====  Stop Button is pressed ===== ");
 
@@ -275,7 +275,7 @@ public class ConversasFragment extends Fragment {
         }
 
 
-        /** ======= Initialize AudioRecord and AudioTrack ======== **/
+        *//** ======= Initialize AudioRecord and AudioTrack ======== **//*
         recorder2 = findAudioRecord(recorder2);
         if (recorder2 == null) {
             Log.e(TAG2, "======== findAudioRecord : Returned Error! =========== ");
@@ -302,9 +302,9 @@ public class ConversasFragment extends Fragment {
             return;
         }
 
-        /** ------------------------------------------------------ **/
+        *//** ------------------------------------------------------ **//*
 
-    /* Recording and Playing in chunks of 320 bytes */
+    *//* Recording and Playing in chunks of 320 bytes *//*
         bufferSize = 320;
 
         int cAmplitude = 0;
@@ -312,23 +312,23 @@ public class ConversasFragment extends Fragment {
 
         while (isRunning == true)
         {
-        /* Read & Write to the Device */
+        *//* Read & Write to the Device *//*
             recorder2.read(buffer, 0, bufferSize);
 
-/*            double sumLevel = 0;
+*//*            double sumLevel = 0;
             for (int i =0; i < bufferReadResult ; i++){
                 sumLevel += buffer[i];
             }
-            amplitudeCalculada = (int) Math.abs( (sumLevel/bufferReadResult))*1000;*/
+            amplitudeCalculada = (int) Math.abs( (sumLevel/bufferReadResult))*1000;*//*
 
-/*            int max = 0;
+*//*            int max = 0;
             for (short s : buffer){
                 amplitudeCalculada = Math.abs(s) * 100;
                 Log.d("AMPLITUDE", String.valueOf(Math.abs(s)));
-            }*/
+            }*//*
 
 
-/*
+*//*
             //int readSize = recorder2.read(buffer, 0, buffer.length);
             int sum = 0;
             double amplitude = 0;
@@ -342,7 +342,7 @@ public class ConversasFragment extends Fragment {
             //amplitudeCalculada = (int) (MAX_REPORTABLE_DB + (20 * Math.log10(amplitude / MAX_REPORTABLE_AMP)));
             Log.d("AMPLITUDE", String.valueOf(amplitude));
             //amplitudeCalculada = calculateDecibel(buffer);
-*/
+*//*
             //Log.d("AMPLITUDE", String.valueOf(amplitudeCalculada));
             track.write(buffer, 0, bufferSize);
             amplitudeCalculada = (buffer[0] & 0xff) << 8 | buffer[1];
@@ -395,5 +395,5 @@ public class ConversasFragment extends Fragment {
         }
         return recorder;
     }
-
+*/
 }

@@ -2,10 +2,133 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.fragment.ConversasFragment">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dip"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
+
+        <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        >
+
+        <ImageView
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/heartbeat4"
+            android:id="@+id/imageView"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="6.69"
+            android:gravity="center_vertical"
+            android:padding="10dip"
+            android:text="25/09/2017"
+            android:textColor="#000" />
+
+        <Chronometer
+            android:id="@+id/chronometer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:textSize="30dp"
+            android:text="00:00"
+            android:textColor="#000"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/data"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/heartbeat4"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <view
+        android:id="@+id/visualizerView"
+        class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView"
+        id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true" />
+
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
+        android:layout_below="@+id/visualizerView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="94dp"
+        android:layout_marginTop="27dp">
+
+<!--        <Button
+            android:id="@+id/StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_alignBaseline="@+id/btAuscultation"
+            android:layout_alignBottom="@+id/btAuscultation"
+            android:layout_alignParentStart="true" />-->
+
+        <ToggleButton
+            android:id="@+id/btAuscultation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:padding="10dp"
+            android:background="@drawable/fundo_caixa_texto"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
+            android:text="ToggleButton"
+            android:textOff="INICIAR AUSCULTAÇÃO"
+            android:textOn="PARAR"
+            android:layout_below="@+id/StopButton"
+            android:layout_centerHorizontal="true" />
+
+
+
+<!--        <Button
+            android:id="@+id/StopButton"
+            android:layout_width="126dp"
+            android:layout_height="wrap_content"
+            android:text="STOP"
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintTop_toBottomOf="@+id/StartButton"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_below="@+id/visualizerView"
+            android:layout_alignParentEnd="true" />-->
+
+    </LinearLayout>
+
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -16,35 +139,44 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
-        <TextView
-            android:id="@+id/data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000"
-            android:text="25/09/2017"
-            android:padding="10dip"
-            android:layout_below="@+id/linearLayout"
-            android:layout_centerHorizontal="true" />
-
-        <Chronometer
-            android:id="@+id/chronometer2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/data"
-            android:layout_centerHorizontal="true"
-            android:padding="10dip"
-            android:text="00:00"
-            android:textColor="#000" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:src="@drawable/heartbeat4"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="6.69"
+        android:gravity="center_vertical"
+        android:padding="10dip"
+        android:text="25/09/2017"
+        android:textColor="#000" />
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:src="@drawable/heartbeat4" />
+
+
+    <Chronometer
+        android:id="@+id/chronometer2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:textSize="20dp"
+        android:text="00:00"
+        android:textColor="#000"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
+
+    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
     <view
         android:id="@+id/visualizerView"
         class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView"
@@ -105,7 +237,7 @@
             android:layout_below="@+id/visualizerView"
             android:layout_alignParentEnd="true" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 

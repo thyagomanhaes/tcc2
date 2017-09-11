@@ -13,7 +13,7 @@
     <style name="botaoPadrao" parent="Theme.AppCompat.Light">
         <item name="colorButtonNormal">@color/colorPrimaryDarker</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
 
     </style>
 

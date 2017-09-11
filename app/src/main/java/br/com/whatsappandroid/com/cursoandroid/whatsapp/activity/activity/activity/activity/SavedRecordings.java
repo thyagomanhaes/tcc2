@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.w3c.dom.Text;
@@ -88,13 +90,28 @@ public class SavedRecordings extends Activity {
 
         realm = Realm.getDefaultInstance();
 
-        listaGravacoes = realm.where(Gravacao.class).equalTo("nome","gravacao1").findAll();
+        listaGravacoes = realm.where(Gravacao.class).equalTo("idPaciente", idPacienteSelecionado).findAll();
 
         listView = (ListView) findViewById(R.id.lv_gravacoes);
 
         GravacaoAdapter adapter = new GravacaoAdapter(SavedRecordings.this, listaGravacoes);
 
         listView.setAdapter( adapter );
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SavedRecordings.this, GravacaoActivity.class);
+                intent.putExtra("nomeGravacao", listaGravacoes.get(position).getNome());
+                intent.putExtra("nomePaciente", nomePaciente);
+                intent.putExtra("emailPaciente", emailPaciente);
+                intent.putExtra("bpmGravacao", listaGravacoes.get(position).getBpm());
+                intent.putExtra("idGravacao",listaGravacoes.get(position).getIdGravacao());
+
+                startActivity( intent );
+            }
+        });
 
         //ListView listView = getListView();
         //savedRecordingsAdapter = new SavedRecordingsAdapter(this, new ArrayList<String>(Arrays.asList(getExternalFilesDir(null).list())));

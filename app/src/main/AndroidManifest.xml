@@ -3,6 +3,7 @@
     package="br.com.whatsappandroid.com.cursoandroid.whatsapp">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".activity.activity.activity.activity.config.Configuracao"
@@ -25,7 +26,8 @@
         <activity android:name=".activity.activity.activity.activity.SavedRecordings" />
         <activity android:name=".activity.activity.activity.activity.CadastroPaciente" />
         <activity android:name=".activity.activity.activity.activity.GravacaoActivity" />
-        <activity android:name=".activity.activity.activity.activity.VoiceRecorderActivity"></activity>
+        <activity android:name=".activity.activity.activity.activity.VoiceRecorderActivity" />
+        <activity android:name=".activity.activity.activity.activity.EnviarEmailActivity"></activity>
     </application>
 
 </manifest>

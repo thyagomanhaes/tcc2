@@ -33,7 +33,7 @@ public class GravacaoAdapter extends ArrayAdapter<Gravacao> {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.linha, parent, false);
+        View rowView = inflater.inflate(R.layout.linha_gravacao, parent, false);
 
         TextView nome = (TextView) rowView.findViewById(R.id.txtNome);
         TextView idPaciente = (TextView) rowView.findViewById(R.id.txtEnd);
