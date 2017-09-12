@@ -262,6 +262,9 @@ public class GravacaoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GravacaoActivity.this,EnviarEmailActivity.class);
+                intent.putExtra("nomeAudio", nomeGravacao);
+                intent.putExtra("textoAnotacao", textoAnotacao.getText().toString());
+                intent.putExtra("emailPaciente", emailPaciente.toString());
                 startActivity( intent );
 
             }

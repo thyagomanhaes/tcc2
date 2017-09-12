@@ -253,7 +253,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 amplitudes.add(amplitudeCalculada);
                 visualizer.addAmplitude(amplitudeCalculada);
                 visualizer.invalidate();
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 60);
             }
         }
     };
@@ -292,6 +292,8 @@ public class VoiceRecorderActivity extends AppCompatActivity {
 
             audioTrack.setPlaybackRate(SAMPLE_RATE);
             audioTrack.play();
+
+            Log.d("BUFFER SIZE = ",String.valueOf(BUFFER_SIZE));
 
             recordingThread = new Thread(new Runnable() {
                 @Override
