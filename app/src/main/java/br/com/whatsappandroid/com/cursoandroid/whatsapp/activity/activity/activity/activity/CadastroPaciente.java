@@ -3,6 +3,7 @@ package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activ
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +22,7 @@ public class CadastroPaciente extends AppCompatActivity {
     private EditText id;
     private EditText nome;
     private EditText email;
-
-
+    private EditText idade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +36,32 @@ public class CadastroPaciente extends AppCompatActivity {
         id = (EditText) findViewById(R.id.textID);
         nome = (EditText) findViewById(R.id.textNome);
         email = (EditText) findViewById(R.id.editEmail);
+        idade = (EditText) findViewById(R.id.textIdade);
 
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Realm realm = Realm.getDefaultInstance();// ... Utilização da base...realm.close();
-                realm.beginTransaction();
+            Realm realm = Realm.getDefaultInstance();// ... Utilização da base...realm.close();
+            realm.beginTransaction();
 
-        Paciente paciente = new Paciente();
-        paciente.setNome(nome.getText().toString());
-        paciente.setId(Integer.parseInt(id.getText().toString()));
-        paciente.setEmail(email.getText().toString());
+            Paciente paciente = new Paciente();
+            paciente.setNome(nome.getText().toString());
+            paciente.setId(Integer.parseInt(id.getText().toString()));
+            paciente.setIdade(Integer.parseInt(idade.getText().toString()));
+            paciente.setEmail(email.getText().toString());
 
-        realm.copyToRealm(paciente);
+            realm.copyToRealm(paciente);
 
-        Toast.makeText(CadastroPaciente.this, "Paciente: " + paciente.getNome() + " cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+            Toast.makeText(CadastroPaciente.this, "Paciente: " + paciente.getNome() + " cadastrado com sucesso!", Toast.LENGTH_LONG).show();
 
-        realm.commitTransaction();
-        realm.close();
+            realm.commitTransaction();
+            realm.close();
 
-        Intent intent = new Intent(CadastroPaciente.this, MainActivity.class);
-        startActivity( intent );
-        finish();
+            Intent intent = new Intent(CadastroPaciente.this, MainActivity.class);
+            startActivity( intent );
+            finish();
 
-            }
+                    }
         });
-
-
-
     }
 }

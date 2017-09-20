@@ -15,6 +15,8 @@ public class Paciente extends RealmObject {
 
     private String nome;
 
+    private int idade;
+
     // Lista de Gravações que o paciente possui
     private RealmList<Gravacao> gravacoes;
 
@@ -50,5 +52,13 @@ public class Paciente extends RealmObject {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }

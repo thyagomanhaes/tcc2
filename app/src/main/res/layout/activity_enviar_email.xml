@@ -4,89 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_google_signin_btn_text_light_disabled"
     tools:context="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.EnviarEmailActivity">
 
     <CheckBox
         android:id="@+id/checkBoxAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="67dp"
         android:text="Áudio:"
         android:textColor="#000"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"
-        android:layout_marginTop="67dp"
-        android:layout_below="@+id/textView4"
-        android:layout_alignStart="@+id/textView4" />
+        tools:layout_editor_absoluteY="16dp" />
 
     <TextView
+        android:id="@+id/txtNomeAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtNomeAudio"
-        android:textColor="#000"
-        android:text="160-27-09-2017 - 15:60"
         android:layout_alignBaseline="@+id/checkBoxAudio"
         android:layout_alignBottom="@+id/checkBoxAudio"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_toEndOf="@+id/textView4"
+        android:text="160-27-09-2017 - 15:60"
+        android:textColor="#000" />
 
     <CheckBox
         android:id="@+id/checkBoxBPM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Diagnóstico do Aplicativo:"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="48dp"
-        android:textColor="#000"
+        android:layout_alignStart="@+id/checkBoxAnotacao"
         android:layout_below="@+id/checkBoxAnotacao"
-        android:layout_alignStart="@+id/checkBoxAnotacao" />
+        android:layout_marginTop="13dp"
+        android:text="Diagnóstico do Aplicativo:"
+        android:textColor="#000"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="48dp" />
 
     <CheckBox
         android:id="@+id/checkBoxAnotacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/checkBoxAudio"
+        android:layout_below="@+id/checkBoxAudio"
+        android:layout_marginTop="15dp"
         android:text="Diagnóstico Médico:"
         android:textColor="#000"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="80dp"
-        android:layout_below="@+id/checkBoxAudio"
-        android:layout_alignStart="@+id/checkBoxAudio" />
+        tools:layout_editor_absoluteY="80dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="18dp"
         android:text="Thyago Manhães"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="36dp" />
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="27/06/1990"
+        android:layout_alignStart="@+id/textView8"
         android:layout_below="@+id/textView8"
-        android:layout_alignStart="@+id/textView8" />
+        android:text="27/06/1990"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="thyago.ufs@gmail.com"
+        android:layout_alignStart="@+id/textView"
         android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/textView" />
+        android:text="thyago.ufs@gmail.com"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="100"
+        android:layout_alignStart="@+id/textView6"
         android:layout_below="@+id/textView6"
-        android:layout_alignStart="@+id/textView6" />
+        android:text="100"
+        android:textColor="@color/colorPrimaryDark" />
 
     <Button
         android:id="@+id/btEnviarEmail"
@@ -101,8 +104,9 @@
         android:id="@+id/txtAnotacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/checkBoxBPM"
+        android:layout_alignBaseline="@+id/checkBoxAnotacao"
+        android:layout_alignBottom="@+id/checkBoxAnotacao"
         android:layout_alignEnd="@+id/txtNomeAudio"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@color/colorPrimaryDark" />
 </RelativeLayout>
