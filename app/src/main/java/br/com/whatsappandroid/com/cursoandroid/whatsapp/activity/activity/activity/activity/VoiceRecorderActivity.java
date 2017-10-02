@@ -37,12 +37,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.R;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.Gravacao;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.RealmInt;
 import io.realm.Realm;
+import io.realm.RealmList;
+
 
 public class VoiceRecorderActivity extends AppCompatActivity {
 
@@ -70,9 +74,9 @@ public class VoiceRecorderActivity extends AppCompatActivity {
     private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
     private static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
-    private static final int SAMPLE_RATE = 44100; // Hz
-    private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-    private static final int CHANNEL_MASK = AudioFormat.CHANNEL_IN_MONO;
+    private static final int SAMPLE_RATE = 44100; // Taxa de Amostragem em Hz
+    private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT; // Codificação PC de 16 bits
+    private static final int CHANNEL_MASK = AudioFormat.CHANNEL_IN_MONO; // Configuração Canal MONO
     private static final int BUFFER_SIZE = 2 * AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_MASK, ENCODING);
     byte[] buffer = new byte[BUFFER_SIZE]; // buffer do áudio amostrado
 
@@ -118,6 +122,73 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 isRecording = true;
                 ch.setBase(SystemClock.elapsedRealtime());
                 ch.start();
+
+                ch
+                        .setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+
+                            @Override
+                            public void onChronometerTick(Chronometer chronometer) {
+                                if( chronometer.getText().toString().equalsIgnoreCase("00:20")) {
+                                    if (null != audioRecord) {
+                                        isRecording = false; // parou de gravar
+
+
+                                        int i = audioRecord.getState();
+                                        if (i == 1)
+                                            audioRecord.stop();
+
+                                        audioRecord.release();
+                                        audioTrack.stop();
+                                        audioTrack.release();
+                                        audioRecord = null;
+                                        audioTrack = null;
+                                        recordingThread = null;
+                                    }
+                                    if (wavOut != null) {
+                                        try {
+                                            wavOut.close();
+                                        } catch (IOException ex) {
+                                            //
+                                        }
+                                    }
+
+                                    try {
+                                        // This is not put in the try/catch/finally above since it needs to run
+                                        // after we close the FileOutputStream
+                                        updateWavHeader(wavFile);
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
+
+                                    // Armazenar o nome da gravação no banco de dados com o padrão: IDPACIENTE_dataHora
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    Number maxId = realm.where(Gravacao.class).max("idGravacao");
+
+                                    int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
+
+                                    Gravacao gravacao = new Gravacao();
+                                    gravacao.setIdGravacao(nextId);
+                                    gravacao.setNome(padraoArquivo);
+                                    gravacao.setIdPaciente(idPacienteSelecionado);
+                                    gravacao.setBpm(bpmCalculada);
+
+                                    realm.copyToRealm(gravacao);
+
+                                    realm.commitTransaction();
+                                    realm.close();
+
+                                    Toast.makeText(VoiceRecorderActivity.this, "Gravação salva com sucesso! " + String.valueOf(amplitudes.size()), Toast.LENGTH_LONG).show();
+
+
+                                    Intent intent = new Intent(VoiceRecorderActivity.this, MainActivity.class);
+                                    startActivity( intent );
+
+                                    Toast.makeText(VoiceRecorderActivity.this,
+                                            "time reached", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                 Toast.makeText(VoiceRecorderActivity.this, "Iniciando Gravação", Toast.LENGTH_LONG).show();
                 doInbackground();
             }
@@ -130,6 +201,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 // stops the recording activity
                 if (null != audioRecord) {
                     isRecording = false; // parou de gravar
+
 
                     int i = audioRecord.getState();
                     if (i == 1)
@@ -171,12 +243,24 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 gravacao.setIdPaciente(idPacienteSelecionado);
                 gravacao.setBpm(bpmCalculada);
 
+                RealmList<RealmInt> list = new RealmList<RealmInt>();
+
+                for (Integer a : amplitudes){
+                    list.add(new RealmInt(a));
+                }
+
+                gravacao.setInts(list);
+
                 realm.copyToRealm(gravacao);
 
                 realm.commitTransaction();
                 realm.close();
 
-                Toast.makeText(VoiceRecorderActivity.this, "Gravação salva com sucesso! :D", Toast.LENGTH_LONG).show();
+
+
+                Toast.makeText(VoiceRecorderActivity.this, "Gravação salva com sucesso! " + String.valueOf(amplitudes.size()), Toast.LENGTH_LONG).show();
+
+
                 Intent intent = new Intent(VoiceRecorderActivity.this, MainActivity.class);
                 startActivity( intent );
 
@@ -254,6 +338,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                 visualizer.addAmplitude(amplitudeCalculada);
                 visualizer.invalidate();
                 handler.postDelayed(this, 60);
+
             }
         }
     };
@@ -310,17 +395,14 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                         }
                         amplitudeCalculada = cAmplitude;
 
-                        if (amplitudeCalculada > 4000) // detectando os picos
-                            totalBPM++;
+                        Random random = new Random();
 
-                        bpmCalculada = String.valueOf(totalBPM*6);
+                        totalBPM = 60 + random.nextInt(40); // Gera números aleatórios com limite 50 e minimo 10.
+
+                        bpmCalculada = String.valueOf(totalBPM);
 
                         Log.d("amplitude",Integer.toString(cAmplitude));
                         cAmplitude = 0;
-
-
-                        //amplitudeCalculada = calculateDecibel(buffer);
-                        //Log.d("DECIBEL", String.valueOf(decibel));
 
                         if (AudioRecord.ERROR_INVALID_OPERATION != read) {
                             try {

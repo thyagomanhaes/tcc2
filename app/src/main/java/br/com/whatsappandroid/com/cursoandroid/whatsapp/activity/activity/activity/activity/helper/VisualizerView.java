@@ -16,8 +16,8 @@ import java.util.List;
 
 public class VisualizerView extends View {
 
-    private static final int LINE_WIDTH = 2;
-    private static final int LINE_SCALE = 50;
+    private static final int LINE_WIDTH = 3;
+    private static final int LINE_SCALE = 30;
 
     private List<Float> amplitudes;
     private int width;

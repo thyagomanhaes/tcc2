@@ -23,12 +23,14 @@ public class EnviarEmailActivity extends AppCompatActivity {
 
     private TextView nomeAudioTxT;
     private TextView anotacaoTxt;
+    private TextView BPMTxt;
     private Button botaoEnviar;
 
 
     private String nomeAudio;
     private String anotacao;
     private String emailPaciente;
+    private String bpm;
 
 
     @Override
@@ -41,6 +43,7 @@ public class EnviarEmailActivity extends AppCompatActivity {
         checkAnotacao = (CheckBox) findViewById(R.id.checkBoxAnotacao);
 
         nomeAudioTxT = (TextView) findViewById(R.id.txtNomeAudio);
+        BPMTxt = (TextView) findViewById(R.id.txtBPM);
         anotacaoTxt = (TextView) findViewById(R.id.txtAnotacao);
         botaoEnviar = (Button) findViewById(R.id.btEnviarEmail);
 
@@ -48,10 +51,12 @@ public class EnviarEmailActivity extends AppCompatActivity {
 
         nomeAudio = (String) intent.getSerializableExtra("nomeAudio");
         anotacao = (String) intent.getSerializableExtra("textoAnotacao");
-        emailPaciente = (String) intent.getSerializableExtra("textoAnotacao");
+        emailPaciente = (String) intent.getSerializableExtra("emailPaciente");
+        bpm = (String) intent.getSerializableExtra("bpm");
 
         nomeAudioTxT.setText(nomeAudio);
         anotacaoTxt.setText(anotacao);
+        BPMTxt.setText(bpm);
 
         botaoEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +70,8 @@ public class EnviarEmailActivity extends AppCompatActivity {
                     share.setType("audio/*");
                     //share.setData(Uri.parse("mailto:"));
                     share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(newFile));
-                    share.putExtra(Intent.EXTRA_SUBJECT, "Título?");
-                    share.putExtra(Intent.EXTRA_TEXT, "Diagnóstico Médico: " + anotacao);
+                    share.putExtra(Intent.EXTRA_SUBJECT, "Estetofone: Dados da Gravação ");
+                    share.putExtra(Intent.EXTRA_TEXT, "Diagnóstico Médico: " + anotacao + "\n BPM calculada: " + bpm);
                     share.putExtra(Intent.EXTRA_EMAIL, TO);
                     startActivity( Intent.createChooser(share, "Share Sound File"));
                 }

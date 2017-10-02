@@ -3,6 +3,7 @@ package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activ
 import java.io.File;
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -22,6 +23,16 @@ public class Gravacao extends RealmObject {
     private float duracaoGravacao;
     private String anotacao;
     private String bpm;
+
+    private RealmList<RealmInt> ints;
+
+    public RealmList<RealmInt> getInts() {
+        return ints;
+    }
+
+    public void setInts(RealmList<RealmInt> ints) {
+        this.ints = ints;
+    }
 
     //private File arquivoAudio;
 

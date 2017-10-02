@@ -84,13 +84,15 @@
         android:textStyle="italic"
         android:textColor="#864747"
         android:id="@+id/txtAnotacao"
-        android:layout_below="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3" />
+        android:layout_alignBaseline="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_marginStart="16dp" />
 
 
     <view
         android:id="@+id/myvisualizerview"
-        class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView2"
+        class="br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView"
         id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
@@ -106,7 +108,8 @@
         android:padding="5dip"
         android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout3">
 
         <LinearLayout
             android:id="@+id/thumbnail2"
@@ -142,23 +145,55 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btPlay"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_action_playback_play"
         android:layout_below="@+id/myvisualizerview"
-        android:layout_toStartOf="@+id/bpm" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout3">
 
-    <Button
-        android:id="@+id/btStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_action_playback_stop"
-        android:layout_alignBaseline="@+id/btPlay"
-        android:layout_alignBottom="@+id/btPlay"
-        android:layout_toEndOf="@+id/btPlay"
-        android:layout_marginStart="18dp" />
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="TextView"
+            android:layout_alignBaseline="@+id/btStop"
+            android:layout_alignBottom="@+id/btStop"
+            android:layout_toEndOf="@+id/txtAnotacao" />
+
+        <Button
+            android:id="@+id/btPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            android:layout_below="@+id/myvisualizerview"
+            android:layout_toStartOf="@+id/btStop"
+            android:layout_marginEnd="13dp" />
+
+        <Button
+            android:id="@+id/btStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pause"
+            android:layout_below="@+id/myvisualizerview"
+            android:layout_alignEnd="@+id/imageView3" />
+
+
+
+
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:layout_alignBaseline="@+id/btPlay"
+            android:layout_alignBottom="@+id/btPlay"
+            android:layout_alignStart="@+id/textView3" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView3"
@@ -167,8 +202,11 @@
         android:text="Diagnóstico Médico:"
         android:textColor="#000"
         android:textSize="15dp"
-        android:layout_below="@+id/btPlay"
-        android:layout_alignEnd="@+id/btStop" />
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>
 

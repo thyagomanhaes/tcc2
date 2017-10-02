@@ -24,14 +24,20 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.R;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.helper.VisualizerView2;
 import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.Gravacao;
+import br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.model.RealmInt;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 public class GravacaoActivity extends AppCompatActivity {
 
@@ -81,13 +87,24 @@ public class GravacaoActivity extends AppCompatActivity {
     private Realm realm;
     private Gravacao gravacaoAtual;
 
+    private Handler handler;
+    private List<Integer> amplitudes;
+    private VisualizerView visualizer;
+    private int amp = 0;
+    private boolean finished = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gravacao);
 
-        mVisualizerView = (VisualizerView2) findViewById(R.id.myvisualizerview);
+        handler = new Handler();
+        amplitudes = new ArrayList<Integer>();
+
+        //mVisualizerView = (VisualizerView2) findViewById(R.id.myvisualizerview);
+
+        visualizer = (VisualizerView) findViewById(R.id.myvisualizerview);
 
         Intent intent = getIntent();
         nomePaciente = (String) intent.getSerializableExtra("nomePaciente");
@@ -107,7 +124,7 @@ public class GravacaoActivity extends AppCompatActivity {
 
         playButton = (Button) findViewById(R.id.btPlay);
         stopButton = (Button) findViewById(R.id.btStop);
-
+        stopButton.setEnabled(false);
 
         nomeGravacaoTextView.setText( nomeGravacao );
         nomePacienteTextView.setText( nomePaciente );
@@ -118,46 +135,83 @@ public class GravacaoActivity extends AppCompatActivity {
         gravacaoAtual = new Gravacao();
         gravacaoAtual = realm.where(Gravacao.class).equalTo("idGravacao", idGravacaoSelecionada).findFirst(); // fazendo a consulta com o ID selecionado no REALM
 
+        handler.post(updateVisualizer);
+
         if (gravacaoAtual.getAnotacao() == null)
             textoAnotacao.setText("Nada");
         else
             textoAnotacao.setText(gravacaoAtual.getAnotacao());
 
-        //tempoView = (TextView) findViewById(R.id.tempo);
-        //tempoView2 = (TextView) findViewById(R.id.textView2);
+        tempoView = (TextView) findViewById(R.id.textView9);
+        tempoView2 = (TextView) findViewById(R.id.textView10);
+
+        String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + nomeGravacao + ".wav";
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset(); // reconfigura MediaPlayer
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        finalTime = mediaPlayer.getDuration();
+        startTime = mediaPlayer.getCurrentPosition();
+
+        if (oneTimeOnly == 0){
+            oneTimeOnly = 1;
+        }
+
+        tempoView.setText(String.format("%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                finalTime)))
+        );
+
+        tempoView2.setText(String.format("%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                startTime)))
+        );
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + nomeGravacao + ".wav";
-
-
                 try{
-                    // configura MediaPlayer para reproduzir o arquivo em filePath
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.reset(); // reconfigura MediaPlayer
-                    mediaPlayer.setDataSource(filePath);
-                    mediaPlayer.prepare();
 
-                    setupVisualizerFxAndUI();
-                    // Make sure the visualizer is enabled only when you actually want to
-                    // receive data, and
-                    // when it makes sense to receive data.
-                    mVisualizer.setEnabled(true);
-                    // When the stream ends, we don't need to collect any more data. We
-                    // don't do this in
-                    // setupVisualizerFxAndUI because we likely want to have more,
-                    // non-Visualizer related code
-                    // in this callback.
-                    mediaPlayer
-                            .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    if (finished){
+                        String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + nomeGravacao + ".wav";
+
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.reset(); // reconfigura MediaPlayer
+                        try {
+                            mediaPlayer.setDataSource(filePath);
+                            mediaPlayer.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 public void onCompletion(MediaPlayer mediaPlayer) {
-                                    mVisualizer.setEnabled(false);
+                                    visualizer.setEnabled(false);
+                                    finished = true;
+                                    Toast.makeText(getApplicationContext(), "FINISHED", Toast.LENGTH_SHORT).show();
+
+                                    playButton.setEnabled(true);
+                                    startTime = mediaPlayer.getDuration();
+                                    tempoView2.setText("0 min, 0sec");
+
+                                    mediaPlayer.reset();
                                 }
-                            });
+                    });
 
                     Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
                     mediaPlayer.start();
+
                     playButton.setEnabled(false);
 
                     finalTime = mediaPlayer.getDuration();
@@ -167,30 +221,21 @@ public class GravacaoActivity extends AppCompatActivity {
                         oneTimeOnly = 1;
                     }
 
-/*                    tempoView.setText(String.format("%d:%d",
+                    tempoView.setText(String.format("%d min, %d sec",
                             TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                             finalTime)))
                     );
 
-                    tempoView2.setText(String.format("%d:%d",
+                    tempoView2.setText(String.format("%d min, %d sec",
                             TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                             startTime)))
-                    );*/
+                    );
 
                     myHandler.postDelayed(UpdateSongTime, 100);
-
-
-                    //mediaPlayer.prepare(); // prepara MediaPlayer
-
-                    //mMediaPlayer = MediaPlayer.create(this, R.raw.teste);
-
-                    //mediaPlayer.start();
-
-                    //updater.run(); // começa a atualizar progressSeekBar
                 }
                 catch (Exception e){
                     Log.e(TAG, e.toString()); // registra exceções
@@ -199,7 +244,13 @@ public class GravacaoActivity extends AppCompatActivity {
             }
         });
 
-
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.pause();
+                playButton.setEnabled(true);
+            }
+        });
 
 
         // Ação que será executada ao clicar na imagem de anotação
@@ -265,25 +316,44 @@ public class GravacaoActivity extends AppCompatActivity {
                 intent.putExtra("nomeAudio", nomeGravacao);
                 intent.putExtra("textoAnotacao", textoAnotacao.getText().toString());
                 intent.putExtra("emailPaciente", emailPaciente.toString());
+                intent.putExtra("bpm", gravacaoAtual.getBpm());
                 startActivity( intent );
-
             }
         });
-
-
-
     }
+
+    Runnable updateVisualizer = new Runnable() {
+        @Override
+        public void run() {
+            RealmList<RealmInt> itens = gravacaoAtual.getInts();
+            for (RealmInt ap : itens) {
+                amp = ap.getVal();
+
+                visualizer.addAmplitude(amp);
+                visualizer.invalidate();
+                handler.postDelayed(this, 60);
+            }
+            handler.removeCallbacks(this); // Finalizando
+        }
+    };
 
     Runnable UpdateSongTime = new Runnable() {
         public void run() {
             startTime = mediaPlayer.getCurrentPosition();
-            tempoView2.setText(String.format("0%d:0%d",
-                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-                                    toMinutes((long) startTime)))
-            );
-            //seekbar.setProgress((int)startTime);
+            if (mediaPlayer.isPlaying()) {
+                tempoView2.setText(String.format("%d min, %d sec",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                        toMinutes((long) startTime)))
+                );
+                stopButton.setEnabled(true);
+            }
+            else{
+                startTime = 0;
+                finalTime = 0;
+                stopButton.setEnabled(false);
+            }
             myHandler.postDelayed(this, 100);
         }
     };
@@ -291,53 +361,6 @@ public class GravacaoActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFinishing() && mMediaPlayer != null) {
-            mVisualizer.release();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
     }
 
-    private void initAudio() {
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        //mMediaPlayer = MediaPlayer.create(this, R.raw.teste);
-
-        setupVisualizerFxAndUI();
-        // Make sure the visualizer is enabled only when you actually want to
-        // receive data, and
-        // when it makes sense to receive data.
-        mVisualizer.setEnabled(true);
-        // When the stream ends, we don't need to collect any more data. We
-        // don't do this in
-        // setupVisualizerFxAndUI because we likely want to have more,
-        // non-Visualizer related code
-        // in this callback.
-        mMediaPlayer
-                .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mVisualizer.setEnabled(false);
-                        playButton.setEnabled(true);
-                    }
-                });
-        mMediaPlayer.start();
-
-    }
-
-    private void setupVisualizerFxAndUI() {
-
-        // Create the Visualizer object and attach it to our media player.
-        mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        mVisualizer.setDataCaptureListener(
-                new Visualizer.OnDataCaptureListener() {
-                    public void onWaveFormDataCapture(Visualizer visualizer,
-                                                      byte[] bytes, int samplingRate) {
-                        mVisualizerView.updateVisualizer(bytes);
-                    }
-
-                    public void onFftDataCapture(Visualizer visualizer,
-                                                 byte[] bytes, int samplingRate) {
-                    }
-                }, Visualizer.getMaxCaptureRate() / 2, true, false);
-    }
 }
