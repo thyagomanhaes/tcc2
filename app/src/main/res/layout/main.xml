@@ -92,21 +92,24 @@
         android:layout_centerHorizontal="true">
 
         <Button
-            android:id="@+id/btGravar"
-            android:layout_width="109dp"
-            android:layout_height="96dp"
-            android:background="@drawable/ic_action_playback_play" />
+            android:id="@+id/btStop"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/ic_action_playback_stop" />
+
 
         <Button
-            android:id="@+id/btStop"
-            android:layout_width="109dp"
-            android:layout_height="96dp"
-            android:background="@drawable/ic_action_playback_stop" />
+            android:id="@+id/btGravar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/player_record" />
+
         <Button
             android:id="@+id/btSalvar"
-            android:layout_width="109dp"
-            android:layout_height="96dp"
-            android:background="@drawable/ic_action_save" />
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/ic_action_save"
+        />
 
     </LinearLayout>
 

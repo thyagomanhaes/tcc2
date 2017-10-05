@@ -1,8 +1,10 @@
 package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity.fragment;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -15,6 +17,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
@@ -97,6 +100,13 @@ public class ConversasFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_conversas, container, false);
 
+        int permission = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.RECORD_AUDIO);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission to record denied");
+        }
+
         // Capturando os elementos da interface gráfica
         visualizer = (VisualizerView) view.findViewById(R.id.visualizerView); // Visualizador para o gráfico
         ch = (Chronometer) view.findViewById(R.id.chronometer2); // Cronômetro
@@ -171,6 +181,8 @@ public class ConversasFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked){
+
+
                     visualizer.clear();
 
                     if (recorder == null)

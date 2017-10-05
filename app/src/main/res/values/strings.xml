@@ -4,6 +4,8 @@
     <string name="botao_cadastrar">Cadastrar</string>
     <string name="item_sair">Sair</string>
     <string name="item_configuracoes">Configurações</string>
+    <string name="permdesc_recordAudio"> permitiir</string>
+    <string name="permlab_recordAudio">label</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

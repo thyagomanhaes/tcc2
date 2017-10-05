@@ -1,16 +1,21 @@
 package br.com.whatsappandroid.com.cursoandroid.whatsapp.activity.activity.activity.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
+import android.media.audiofx.NoiseSuppressor;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,6 +64,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
     private VisualizerView visualizer;
     private Button botaoGravar;
     private Button botaoSalvar;
+    private Button botaoParar;
 
     private Chronometer ch;
 
@@ -97,10 +103,21 @@ public class VoiceRecorderActivity extends AppCompatActivity {
     private int totalBPM = 0;
     private String bpmCalculada;
 
+    private static String TAG2 = "PermissionDemo";
+    private static final int RECORD_REQUEST_CODE = 101;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG2, "Permission to record denied");
+            makeRequest();
+        }
 
         Intent intent = getIntent();
         idPacienteSelecionado = (int) intent.getSerializableExtra("idPacienteSelecionado");
@@ -108,6 +125,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         visualizer = (VisualizerView) findViewById(R.id.visualizerView2);
         botaoGravar = (Button) findViewById(R.id.btGravar);
         botaoSalvar = (Button) findViewById(R.id.btSalvar);
+        botaoParar = (Button) findViewById(R.id.btStop);
 
         ch = (Chronometer) findViewById(R.id.chronometer);
         //qtdAmplitudes = (TextView) findViewById(R.id.amplitudes2);
@@ -115,11 +133,17 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         handler = new Handler();
         amplitudes = new ArrayList<Integer>();
 
+        botaoSalvar.setEnabled(false);
+        botaoParar.setEnabled(false);
+
+
         // Ações para executar quando clicar no botão GRAVAR
         botaoGravar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isRecording = true;
+
+
                 ch.setBase(SystemClock.elapsedRealtime());
                 ch.start();
 
@@ -128,7 +152,7 @@ public class VoiceRecorderActivity extends AppCompatActivity {
 
                             @Override
                             public void onChronometerTick(Chronometer chronometer) {
-                                if( chronometer.getText().toString().equalsIgnoreCase("00:20")) {
+                                if( chronometer.getText().toString().equalsIgnoreCase("00:15")) {
                                     if (null != audioRecord) {
                                         isRecording = false; // parou de gravar
 
@@ -172,6 +196,14 @@ public class VoiceRecorderActivity extends AppCompatActivity {
                                     gravacao.setNome(padraoArquivo);
                                     gravacao.setIdPaciente(idPacienteSelecionado);
                                     gravacao.setBpm(bpmCalculada);
+
+                                    RealmList<RealmInt> list = new RealmList<RealmInt>();
+
+                                    for (Integer a : amplitudes){
+                                        list.add(new RealmInt(a));
+                                    }
+
+                                    gravacao.setInts(list);
 
                                     realm.copyToRealm(gravacao);
 
@@ -328,6 +360,31 @@ public class VoiceRecorderActivity extends AppCompatActivity {
 
     }
 
+    protected void makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                RECORD_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i(TAG, "Permission has been denied by user");
+                } else {
+                    Log.i(TAG, "Permission has been granted by user");
+                }
+                return;
+            }
+        }
+    }
+
     Runnable updateVisualizer = new Runnable() {
         @Override
         public void run() {
@@ -362,8 +419,10 @@ public class VoiceRecorderActivity extends AppCompatActivity {
         try {
             // Open our two resources
             audioRecord = new AudioRecord(AUDIO_SOURCE, SAMPLE_RATE, CHANNEL_MASK, ENCODING, BUFFER_SIZE);
-            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, ENCODING, BUFFER_SIZE, AudioTrack.MODE_STREAM);
+            audioTrack = new AudioTrack(AudioManager.STREAM_VOICE_CALL, SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, ENCODING, BUFFER_SIZE, AudioTrack.MODE_STREAM);
             wavOut = new FileOutputStream(wavFile);
+
+            NoiseSuppressor.create(audioRecord.getAudioSessionId());
 
             // Write out the wav file header
             writeWavHeader(wavOut, CHANNEL_MASK, SAMPLE_RATE, ENCODING);
